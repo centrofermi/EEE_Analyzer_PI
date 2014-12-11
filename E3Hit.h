@@ -21,8 +21,6 @@
 #ifndef BOSS__E3HIT__LIBGUARD
 #define BOSS__E3HIT__LIBGUARD
 
-#include <math.h>
-
 /*! \class E3Hit
   \brief Class describing a hit in the detector.
 

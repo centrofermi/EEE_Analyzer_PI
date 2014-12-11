@@ -32,7 +32,7 @@ E3Vector::E3Vector(double x, double y, double z) :
 {}
 
 
-E3Vector::E3Vector(  E3Point &p) :
+E3Vector::E3Vector(const  E3Point &p) :
   E3Point(p.x(), p.y(), p.z())
 {}
 

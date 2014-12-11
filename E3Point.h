@@ -39,13 +39,13 @@ class E3Point
   ~E3Point() {}
 
   /// \brief Return the x-coordinate.
-  double x()  { return m_x; }
+  double x() const { return m_x; } 
 
   /// \brief Return the x-coordinate.
-  double y()  { return m_y; }
+  double y() const { return m_y; }
 
   /// \brief Return the x-coordinate.
-  double z()  { return m_z; }
+  double z() const { return m_z; }
 
   /// \brief Scale the components of the vector by a multiplicative factor.
   void scale(double factor);

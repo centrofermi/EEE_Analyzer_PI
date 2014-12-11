@@ -61,7 +61,7 @@ class E3Track
   { return m_direction; }
 
   /// \brief Get the track chi square.
-  inline double chisquare() 
+  inline double chisquare() const 
   { return m_chisquare; }
 
   /// \brief
@@ -110,16 +110,14 @@ class E3Track
   E3Point extrapolate(double z);
   
   /// \brief Define how to sort tracks.
-  friend bool operator< (E3Track &lhs, E3Track &rhs)
+  friend bool operator< (const E3Track &lhs, const E3Track &rhs)
   { return (lhs.chisquare() < rhs.chisquare()); }
 
   /// \brief Calculate the distance between the track and a point.
   friend double dist(E3Point& p, E3Track& t)
-  { E3Point p0 = t.m_origin - p;
-    E3Vector v0 = E3Vector(p0);
-    return cross(t.m_direction, v0).mag(); }
+  { return cross(t.m_direction, E3Vector(t.m_origin - p)).mag(); }
 
-  friend double dist(E3Track& t, E3Point& p)
+  friend double dist( E3Track& t, E3Point& p)
   { return dist(p, t); }
 
   /// \brief Standard output.

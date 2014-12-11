@@ -41,7 +41,7 @@ class E3Vector : public E3Point
   E3Vector(double x, double y, double z);
 
   /// \brief Copy constructor from an E3Point object.
-  E3Vector(  E3Point &p);
+  E3Vector( const E3Point &p);
 
   /// \brief Destructor.
   ~E3Vector() {}
@@ -77,19 +77,19 @@ class E3Vector : public E3Point
     { vec.scale(1./factor); return vec; }  
 
   /// \brief Scalar product.
-  friend double dot(  E3Vector &v1,   E3Vector &v2)
+  friend double dot(const  E3Vector &v1, const  E3Vector &v2)
   { return (v1.m_x*v2.m_x + v1.m_y*v2.m_y + v1.m_z*v2.m_z); }
 
   /// \brief Vector product.
-  friend E3Vector cross(  E3Vector &v1,   E3Vector &v2)
+  friend E3Vector cross(const  E3Vector &v1,const  E3Vector &v2)
   { double x = v1.m_y*v2.m_z - v1.m_z*v2.m_y;
     double y = v1.m_z*v2.m_x - v1.m_x*v2.m_z;
     double z = v1.m_x*v2.m_y - v1.m_y*v2.m_x;
     return E3Vector(x, y, z); }
 
   /// \brief Angle between two vectors.
-  //friend double angle(E3Vector &v1, E3Vector &v2)
-  //{ return degrees(acos(dot(v1.unit(), v2.unit()))); }
+  friend double angle(  E3Vector &v1,   E3Vector &v2)
+  { return degrees(acos(dot(v1.unit(), v2.unit()))); }
 
   /// \brief Standard output.
   std::ostream& fillStream(std::ostream& os)  ;
