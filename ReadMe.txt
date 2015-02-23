@@ -30,4 +30,3 @@ La creazione guidata applicazione utilizza i commenti "TODO:" per indicare le
 parti del codice sorgente da aggiungere o personalizzare.
 
 /////////////////////////////////////////////////////////////////////////////
-test

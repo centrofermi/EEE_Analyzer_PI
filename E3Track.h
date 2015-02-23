@@ -129,7 +129,7 @@ class E3Track
 
  private:
   
-  /// \brief 
+  /// \brief cluster of the track
   E3Cluster m_clusters[3];
 
   /// \brief The track starting point.

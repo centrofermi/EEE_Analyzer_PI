@@ -11,9 +11,12 @@ private:
 	std::ifstream _sourceStream;
 
 	//out file
-	std::ofstream _timFile;
-	std::ofstream _2ttFile;
-	std::ofstream _outFile;
+	E3OutFileOUT  _outFile;
+	E3OutFileSUM  _sumFile2;
+	E3OutFileTIM  _timFile;
+	E3OutFile2TT  _2ttFile;
+
+
 	std::ofstream _sumFile;
 
 	E3Gps	_gps;
@@ -46,7 +49,7 @@ private:
 	UInt_32b	_gMediumClusterMult;						//events with 1 or 2 cluster/chamber
 	UInt_32b	_gHighClusterMult;							//events with at least one chamber with cluster multiplicity > 2
 	
-	bool createOutFile(std::string OutDir);
+	StatusCode createOutFile(std::string OutDir);
 	UInt_16b getEvent();
 	void getMultiplicity();
 
@@ -69,7 +72,6 @@ public:
 
 	//write info
 	std::ostream&	writeEventTim(std::ostream& os=std::cout);
-	std::ostream&	writeEventOut(std::ostream& os=std::cout);
 	std::ostream&	writeRunSum(std::ostream& os=std::cout);
 	std::ostream&	writeHeaderInfo(std::ostream& os=std::cout);
 };

@@ -24,6 +24,8 @@
 #include "intDef.h"
 #include "SourceStruct.h"
 
+
+#include "E3StatusCode.h"
 #include "E3Point.h"
 #include "E3Hit.h"
 #include "E3Vector.h"
@@ -35,6 +37,11 @@
 #include "E3Gps.h"
 #include "E3Event.h"
 #include "E3RecoEvent.h"
+#include "E3OutFileBase.h"
+#include "E3OutFileOUT.h"
+#include "E3OutFile2TT.h"
+#include "E3OutFileSUM.h"
+#include "E3OutFileTIM.h"
 #include "E3Run.h"
 
 

@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "E3Run.h"
 
 
 E3Run::E3Run(void):_gps(),_gHitMult(3,std::vector< UInt_32b>(1000,0)),_gSumHitMult(3000,0),
@@ -22,7 +21,12 @@ E3Run::~E3Run(void)
 void E3Run::analyzeRun(std::string Source,std::string OutDir)
 {
 	_sourceStream.open(Source.c_str(),std::ios::binary);
+	if(!_sourceStream.good()) 
+	{
 
+		std::cout<<"Unable to open input files...reconstruction aborted"<<std::endl;
+		return;
+	}
 	//get file size
     _sourceStream.seekg (0, _sourceStream.end);
 	UInt_32b FileLength = _sourceStream.tellg();
@@ -64,15 +68,17 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 	writeGpsInfo(std::cout);
 
 	//generate output files
-	if(!createOutFile(OutDir)) return;
+	if(createOutFile(OutDir)) 
+	{
+
+		std::cout<<"Unable to open all output files...reconstruction aborted"<<std::endl;
+		return;
+	}
 
 	//write file header
-	_timFile << "  run_number,event_number,event_timesecs since 1.1.2007,nanosec"<<std::endl;
-	_outFile << "  run_number,event_number,secs_since_1.1.2007,nanosec,microseconds_since_start_of_runtrack:"
-		<<" unit_vector_x,unit_vector_y,unit_vector_z,chi_squared,time of flight[ns],track length[cm]"<<std::endl;
-	_2ttFile << "  run_number,event_number,secs_since_1.1.2007,nanosecs,microseconds_since_start_of_runtrack1:"
-		<<" unit_vector_x,unit_vector_y,unit_vector_z,chi_squared,time of flight[ns],track length[cm],track2:"
-		<<" unit_vector_x,unit_vector_y,unit_vector_z,chi_squared,time of flight[ns],track length[cm]"<<std::endl;
+	_outFile.WriteHeader();
+	_timFile.WriteHeader();
+	_2ttFile.WriteHeader();
 
 	//start event loop
 
@@ -104,15 +110,16 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 				}
 				
 				//write event
-				writeEventTim(_timFile);
-				writeEventOut(_outFile);
+				_outFile.WriteEntry(_hRunNumber,_gps,_event);
+				_timFile.WriteEntry(_hRunNumber,_gps,_event);
+				_2ttFile.WriteEntry(_hRunNumber,_gps,_event);
 			}
 		}
 	}
 		_sourceStream.close();
-		/*std::cout<<GoodEvent<<std::endl;
+		std::cout<<GoodEvent<<std::endl;
 		std::cout<<trackfound<<std::endl;
-		std::cout<<_analyzed<<std::endl;*/
+		std::cout<<_analyzed<<std::endl;
 		writeRunSum(_sumFile);
 
 		_timFile.close();
@@ -183,125 +190,39 @@ std::ostream& E3Run::writeHeaderInfo(std::ostream& os)
 	return os;
 }
 
-bool E3Run::createOutFile(std::string OutDir)
+StatusCode E3Run::createOutFile(std::string OutDir)
 {
-	
+	StatusCode OutputOpening=SUCCESS;	
 	std::string fileName;
 
 	fileName=OutDir;
 	fileName.append(_hRunName);
-	fileName.append(".tim");	
-	_timFile.open(fileName.c_str());
+	fileName.append(".tim");
+	OutputOpening=_timFile.open(fileName);
 
 	fileName.clear();
 	fileName=OutDir;
 	fileName.append(_hRunName);
-	fileName.append(".out");	
-	_outFile.open(fileName.c_str());
+	fileName.append(".out");		
+	OutputOpening=_outFile.open(fileName);
 
 	fileName.clear();
 	fileName=OutDir;
 	fileName.append(_hRunName);
 	fileName.append(".2tt");	
-	_2ttFile.open(fileName.c_str());
+	OutputOpening=_2ttFile.open(fileName);
 
 	fileName.clear();
 	fileName=OutDir;
 	fileName.append(_hRunName);
 	fileName.append(".sum");
 	_sumFile.open(fileName.c_str());
+	fileName.append(".sum");
+	OutputOpening=_sumFile2.open(fileName);
 
-	if (_timFile.good() && _2ttFile.good() && _sumFile.good() && _outFile.good()) return true;
-	else
-	{
-		std::cout<<"Unable to create output file"<<std::endl;
-		return false;
-	}
-}
+	if (!(_timFile.good() && _2ttFile.good() && _sumFile.good())) OutputOpening=FAILURE;
 
-std::ostream& E3Run::writeEventTim(std::ostream& os)
-{
-	//run number from header
-	os.width(6);
-	os << std::dec<<std::right<<_hRunNumber;
-
-	//event number(corrected for 1 event offset)
-	os.width(11);		
-	os << _event.getEvtNum()-1;
-
-	//seconds from 1.1.2007
-	os.width(11);
-	os <<_event.getEvtSec()+getGpsE3Timestamp();
-	os.width(11);
-
-	//nanosecond from last PPS
-	long clkNum=_event.getEvtBunch()+_event.getEvtOrbit()*4000;
-	double nsec=1.0/(double)(_event.getEvtCal())*(double)clkNum/1e-9;
-	os <<std::right<<(long)nsec<<std::endl;
-		
-	return os;
-}
-
-std::ostream& E3Run::writeEventOut(std::ostream& os)
-{
-
-
-	//run number from header
-	os.width(6);
-	os << std::fixed<<std::dec<<std::right<<_hRunNumber;
-
-	//event number(corrected for 1 event offset)
-	os.width(11);		
-	os << _event.getEvtNum()-1;
-
-
-	E3Track bestTrack;
-	if (!_event.numTracks())  // if no tracks are reconstructed,write it and return
-	{
-		os.width(11);
-		os <<"no hits"<<std::endl;
-		return os;
-	}
-	else bestTrack=_event.bestTrack();
-
-
-	//seconds from 1.1.2007
-	os.width(11);
-	os <<_event.getEvtSec()+getGpsE3Timestamp();
-
-	//nanosecond from last PPS
-	os.width(11);
-	long clkNum=_event.getEvtBunch()+_event.getEvtOrbit()*4000;
-	double nsec=1.0/(double)(_event.getEvtCal())*(double)clkNum/1e-9;
-	os <<std::right<<(long)nsec;
-
-	//micro from run start
-	os.width(13);
-	long micro=nsec/1000+_event.getEvtSec()*1000000;
-	os <<std::right<<(long)micro;
-
-	//cosine direction
-	os.width(10);	
-	os << std::setprecision(5)<<bestTrack.xdir();
-	os.width(10);		
-	os << bestTrack.ydir();
-	os.width(10);		
-	os << bestTrack.zdir();
-
-	//chi2
-	os.width(9);	
-	int aux=0;
-	os << std::setprecision(3)<<bestTrack.chisquare();
-
-	//tof
-	os.width(11);	
-	os <<std::setprecision(3)<< bestTrack.timeOfFlight();
-
-	//track L
-	os.width(11);	
-	os <<std::setprecision(2)<< (double)bestTrack.length()<<std::endl;
-		
-	return os;
+	return OutputOpening;
 }
 
 std::ostream& E3Run::writeRunSum(std::ostream& os)

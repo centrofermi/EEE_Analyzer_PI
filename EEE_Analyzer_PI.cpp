@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 	
 	E3Run E3Evt;
 	if (argc==1) 
-		E3Evt.analyzeRun("C:/Users/Boss/Desktop/Data/PISA-01-2014-10-30-010810.bin","C:/Users/Boss/Desktop/Data/Out/");
+		E3Evt.analyzeRun("C:/Users/Boss/Desktop/Data/PISA-01-2015-02-21-00004.bin","C:/Users/Boss/Desktop/Data/Out/");
 	if (argc==2)
 	{
 		std::string sourceFile=argv[1];

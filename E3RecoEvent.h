@@ -15,8 +15,6 @@ public:
 
 	
 
-	/// \brief The vector of reconstructed tracks.
-	E3TrackVec _trackVec;
 
 	 /// \brief Return the number of hits in a given plane.
 	UInt_16b numHits(UInt_16b plane);
@@ -57,6 +55,8 @@ private:
 	/// \brief The vector of clusters.
 	E3ClusterVec _clusterVec[3];
 
+	/// \brief The vector of reconstructed tracks.
+	E3TrackVec _trackVec;
 };
 
 #endif
