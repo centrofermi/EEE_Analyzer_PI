@@ -16,8 +16,8 @@ StatusCode E3OutFileBase::open(const char* path)
 	if (!is_open()) {
 		// Return 1 on error.
 		std::cout << "Could not open output file: " << path << std::endl;
-		return StatusCode::FAILURE;
+		return FAILURE;
 	}
-	return StatusCode::SUCCESS;
+	return SUCCESS;
 
 }
