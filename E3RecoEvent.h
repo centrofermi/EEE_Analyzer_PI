@@ -2,7 +2,7 @@
 #define BOSS__E3RECOEVENT__LIBGUARD
 
 
-class E3RecoEvent:public E3Event
+class E3RecoEvent:public E3Event, public E3Gps
 {
 
 

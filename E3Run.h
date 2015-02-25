@@ -1,7 +1,7 @@
 #ifndef BOSS__E3RUN__LIBGUARD
 #define BOSS__E3RUN__LIBGUARD
 
-class E3Run
+class E3Run:public E3RecoEvent
 {
 
 
@@ -18,9 +18,6 @@ private:
 
 
 	std::ofstream _sumFile;
-
-	E3Gps	_gps;
-	E3RecoEvent _event;
 
 	//run header info
 	
@@ -60,14 +57,6 @@ public:
 
 	
 	void analyzeRun(std::string Source,std::string OutDir);
-
-
-
-	//call to gps class
-	inline UInt_64b					getGpsE3Timestamp()							{return _gps.getGpsE3Timestamp();};
-	inline t_gps					getGpsStruct()								{return _gps.getGpsStruct();};
-	inline void						setGpsStruct(t_gps gps_s)					{_gps.setGpsStruct(gps_s);};
-	inline std::ostream&			writeGpsInfo(std::ostream& os)				{return _gps.writeGpsInfo(os);};
 
 
 	//write info
