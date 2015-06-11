@@ -1,9 +1,6 @@
 ﻿========================================================================
     APPLICAZIONE CONSOLE: cenni preliminari sul progetto EEEAnalyzer
-
 ========================================================================
-
-GitHub synch
 
 La creazione guidata applicazione ha creato questa applicazione EEEAnalyzer.
 

@@ -79,6 +79,7 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 	_outFile.WriteHeader();
 	_timFile.WriteHeader();
 	_2ttFile.WriteHeader();
+	_debFile.WriteHeader();
 
 	//start event loop
 
@@ -105,7 +106,7 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 				if(numTracks())
 				{
 					trackfound++;
-					if(bestTrack.chisquare()<10)	GoodEvent++;
+					if(bestTrack.chisquare() < CHI2THR)	GoodEvent++;
 
 				}
 				
@@ -113,6 +114,7 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 				_outFile.WriteEntry(_hRunNumber,(E3Gps)*this,(E3RecoEvent) *this);
 				_timFile.WriteEntry(_hRunNumber,(E3Gps)*this,(E3RecoEvent) *this);
 				_2ttFile.WriteEntry(_hRunNumber,(E3Gps)*this,(E3RecoEvent) *this);
+				_debFile.WriteEntry((E3RecoEvent) *this);
 			}
 		}
 	}
@@ -215,12 +217,18 @@ StatusCode E3Run::createOutFile(std::string OutDir)
 	fileName.clear();
 	fileName=OutDir;
 	fileName.append(_hRunName);
+	fileName.append(".deb");	
+	OutputOpening=_debFile.open(fileName);
+
+	fileName.clear();
+	fileName=OutDir;
+	fileName.append(_hRunName);
 	fileName.append(".sum");
 	_sumFile.open(fileName.c_str());
 	fileName.append(".sum");
 	OutputOpening=_sumFile2.open(fileName);
 
-	if (!(_timFile.good() && _2ttFile.good() && _sumFile.good())) OutputOpening=FAILURE;
+	if (!(_timFile.good() && _2ttFile.good() && _sumFile.good() && _debFile.good())) OutputOpening=FAILURE;
 
 	return OutputOpening;
 }

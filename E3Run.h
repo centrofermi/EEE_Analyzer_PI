@@ -15,6 +15,7 @@ private:
 	E3OutFileSUM  _sumFile2;
 	E3OutFileTIM  _timFile;
 	E3OutFile2TT  _2ttFile;
+	E3OutFileDEB  _debFile;
 
 
 	std::ofstream _sumFile;

@@ -30,6 +30,9 @@ public:
 	
 	/// \brief Return the number of tracks.
 	UInt_16b numTracks();
+	/// \brief Return the number of tracks with chi2 below CHI2THR constant.
+	UInt_16b numGoodTracks();
+
 	/// \brief Return the best track if it exists, a dummy "empty" track
 	/// otherwise.
 	E3Track bestTrack();

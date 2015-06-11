@@ -10,4 +10,6 @@
 #define CLUSTERYSIZE   5.
 #define CLUSTERXSIZE   5.
 
+#define CHI2THR			10
+
 #endif

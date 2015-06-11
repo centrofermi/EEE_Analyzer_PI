@@ -40,6 +40,7 @@
 #include "E3OutFileBase.h"
 #include "E3OutFileOUT.h"
 #include "E3OutFile2TT.h"
+#include "E3OutFileDEB.h"
 #include "E3OutFileSUM.h"
 #include "E3OutFileTIM.h"
 #include "E3Run.h"

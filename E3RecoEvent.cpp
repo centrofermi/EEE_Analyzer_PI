@@ -214,6 +214,17 @@ UInt_16b E3RecoEvent::numTracks()
 	return _trackVec.size();
 }
 
+UInt_16b E3RecoEvent::numGoodTracks()
+{
+
+	UInt_16b idx=0;
+
+	for (idx=0; idx<_trackVec.size(); idx++)
+		if (_trackVec.at(idx).chisquare() > CHI2THR) break;
+
+	return idx;
+}
+
 
 E3Track E3RecoEvent::bestTrack() 
 {
