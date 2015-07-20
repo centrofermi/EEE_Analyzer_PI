@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="File di origine">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="File di intestazione">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="File di risorse">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceStruct.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="intDef.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3Event.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3Run.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3Gps.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3RawData.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="Constant.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3StripData.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3RecoEvent.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3Hit.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3Point.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3Cluster.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3Vector.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3Track.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3Fitter.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3OutFileOUT.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3OutFileBase.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3StatusCode.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3OutFile2TT.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3OutFileSUM.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+    <ClInclude Include="E3OutFileTIM.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="EEEAnalyzer.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3Event.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3Run.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3Gps.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3RawData.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3StripData.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3RecoEvent.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3Hit.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3Point.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3Cluster.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3Vector.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3Track.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3Fitter.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3OutFileOUT.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3OutFileBase.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3OutFile2TT.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3OutFileSUM.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+    <ClCompile Include="E3OutFileTIM.cpp">
+      <Filter>File di origine</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,2 +1,9 @@
 *.o
 EEE_Analyzer_PI*
+Debug/*
+ipch/*
+Release/*
+EEEAnalyzer.sdf
+EEEAnalyzer/Debug/*
+EEEAnalyzer/Release/*
+EEEAnalyzer.opensdf
