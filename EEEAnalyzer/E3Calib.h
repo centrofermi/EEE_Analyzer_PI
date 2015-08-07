@@ -33,7 +33,6 @@ private:
 	std::ifstream _sourceStream;
 
 	//out file
-	E3OutFileCAL	_calFile;
 	TFile*			_rootFile;
 	t_header		_headerStruct;
 	t_gps			_gpsStruct;
@@ -42,9 +41,9 @@ private:
 
 
 	//Create output files
-	StatusCode createOutFiles(std::string OutDir);
+	StatusCode createOutFile(std::string OutDir);
 	//close output files
-	void closeOutFiles();
+	void closeOutFile();
 	//get event from source file
 	UInt_16b getEvent();
 	//retrive mean value from calibration histograms

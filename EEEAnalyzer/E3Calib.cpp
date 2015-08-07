@@ -158,7 +158,7 @@ corr_matrix E3Calib::runCalibration(std::string Source,std::string OutDir,bool d
 	//set and print Gps info
 	setGpsStruct(_gpsStruct);
 
-	if(createOutFiles(OutDir)) 
+	if(createOutFile(OutDir)) 
 	{
 
 		std::cout<<"Unable to open all output files...calibration aborted"<<std::endl;
@@ -189,7 +189,7 @@ corr_matrix E3Calib::runCalibration(std::string Source,std::string OutDir,bool d
 
 	getMean();
 	computeCorrections();
-	closeOutFiles();
+	closeOutFile();
 	_sourceStream.close();
 
 	
@@ -200,7 +200,7 @@ corr_matrix E3Calib::runCalibration(std::string Source,std::string OutDir,bool d
 
 }
 
-void E3Calib::closeOutFiles()
+void E3Calib::closeOutFile()
 {
 	if (_debug)
 	{
@@ -212,10 +212,9 @@ void E3Calib::closeOutFiles()
 			}
 			_rootFile->Close();
 	}
-	_calFile.close();
 }
 
-StatusCode E3Calib::createOutFiles(std::string OutDir)
+StatusCode E3Calib::createOutFile(std::string OutDir)
 {	
 	StatusCode OutputOpening=SUCCESS;	
 	std::string fileName;

@@ -90,9 +90,6 @@
     <ClInclude Include="E3Calib.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
-    <ClInclude Include="E3OutFileCAL.h">
-      <Filter>File di intestazione</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -153,9 +150,6 @@
       <Filter>File di origine</Filter>
     </ClCompile>
     <ClCompile Include="E3Calib.cpp">
-      <Filter>File di origine</Filter>
-    </ClCompile>
-    <ClCompile Include="E3OutFileCAL.cpp">
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>

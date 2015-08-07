@@ -91,7 +91,6 @@
     <ClInclude Include="E3Hit.h" />
     <ClInclude Include="E3OutFile2TT.h" />
     <ClInclude Include="E3OutFileBase.h" />
-    <ClInclude Include="E3OutFileCAL.h" />
     <ClInclude Include="E3OutFileOUT.h" />
     <ClInclude Include="E3OutFileSUM.h" />
     <ClInclude Include="E3OutFileTIM.h" />
@@ -117,7 +116,6 @@
     <ClCompile Include="E3Hit.cpp" />
     <ClCompile Include="E3OutFile2TT.cpp" />
     <ClCompile Include="E3OutFileBase.cpp" />
-    <ClCompile Include="E3OutFileCAL.cpp" />
     <ClCompile Include="E3OutFileOUT.cpp" />
     <ClCompile Include="E3OutFileSUM.cpp" />
     <ClCompile Include="E3OutFileTIM.cpp" />
