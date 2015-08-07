@@ -20,6 +20,16 @@ E3Run::~E3Run(void)
 
 void E3Run::analyzeRun(std::string Source,std::string OutDir)
 {
+
+
+	//run calibration
+
+	E3Calib caliber;
+	//caliber.importCalibration(caliber.runCalibration(Source,OutDir));
+	importCalibration(caliber.runCalibration(Source,OutDir));
+
+
+	//start analysis
 	_sourceStream.open(Source.c_str(),std::ios::binary);
 	if(!_sourceStream.good()) 
 	{
@@ -36,25 +46,24 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 
 	// header parsing (contains gps inforamtion)
 
-	t_gps EEE_gps;
 	E3Track bestTrack;
 
 	do
 	{
-		_sourceStream.read((char*)&_hH,			sizeof(_hH)				);  //fix for standard EEE header
+		_sourceStream.read((char*)&_headerStruct.hH, sizeof(_headerStruct.hH));  //fix for standard EEE header
 		//std::cout<< "Found "<<_hH<<std::endl;
-	} while (_hH!=0xfbfbfbfb && (_sourceStream.tellg()<FileLength));
+	} while (_headerStruct.hH!=0xfbfbfbfb && (_sourceStream.tellg()<FileLength));
 
-	_sourceStream.read((char*)&_hVersion,	sizeof(_hVersion)		);
-	_sourceStream.read((char*)&_hMachineID,	sizeof(_hMachineID)		);
-	_sourceStream.read((char*)&_hRunNumber,	sizeof(_hRunNumber)		);
-	_sourceStream.read((char*)&_hRunNameL,	sizeof(_hRunNameL)		);
-	_sourceStream.read((char*)&_hRunName,	_hRunNameL				);
-	_sourceStream.read((char*)&_hTrgMask,	sizeof(_hTrgMask)		);
-	_sourceStream.read((char*)&_hNinoMap,	sizeof(_hNinoMap)		);
-	_sourceStream.read((char*)&_hStartTime,	sizeof(_hStartTime)		);
-	_sourceStream.read((char*)&EEE_gps,		sizeof(t_gps)			);
-	_sourceStream.read((char*)&_hT,			sizeof(_hT)				);
+	_sourceStream.read((char*)&_headerStruct.hVersion,	sizeof(_headerStruct.hVersion)		);
+	_sourceStream.read((char*)&_headerStruct.hMachineID,sizeof(_headerStruct.hMachineID)		);
+	_sourceStream.read((char*)&_headerStruct.hRunNumber,sizeof(_headerStruct.hRunNumber)		);
+	_sourceStream.read((char*)&_headerStruct.hRunNameL,	sizeof(_headerStruct.hRunNameL)		);
+	_sourceStream.read((char*)&_headerStruct.hRunName,	_headerStruct.hRunNameL				);
+	_sourceStream.read((char*)&_headerStruct.hTrgMask,	sizeof(_headerStruct.hTrgMask)		);
+	_sourceStream.read((char*)&_headerStruct.hNinoMap,	sizeof(_headerStruct.hNinoMap)		);
+	_sourceStream.read((char*)&_headerStruct.hStartTime,sizeof(_headerStruct.hStartTime)		);
+	_sourceStream.read((char*)&_gpsStruct,		sizeof(t_gps)			);
+	_sourceStream.read((char*)&_headerStruct.hT,		sizeof(_headerStruct.hT)				);
 
 	//set event gps timestamp
 	setGpsTimestamp(getGpsE3Timestamp());
@@ -64,7 +73,7 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 	writeHeaderInfo(std::cout);
 	
 	//set and print Gps info
-	setGpsStruct(EEE_gps);
+	setGpsStruct(_gpsStruct);
 	writeGpsInfo(std::cout);
 
 	//generate output files
@@ -82,7 +91,7 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 
 	//start event loop
 
-	setNinoMap(_hNinoMap);
+	setNinoMap(_headerStruct.hNinoMap);
 	_analyzed=0;
 	int GoodEvent=0;
 	int trackfound=0;
@@ -110,9 +119,9 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 				}
 				
 				//write event
-				_outFile.WriteEntry(_hRunNumber,(E3Gps)*this,(E3RecoEvent) *this);
-				_timFile.WriteEntry(_hRunNumber,(E3Gps)*this,(E3RecoEvent) *this);
-				_2ttFile.WriteEntry(_hRunNumber,(E3Gps)*this,(E3RecoEvent) *this);
+				_outFile.WriteEntry(_headerStruct.hRunNumber,(E3Gps)*this,(E3RecoEvent) *this);
+				_timFile.WriteEntry(_headerStruct.hRunNumber,(E3Gps)*this,(E3RecoEvent) *this);
+				_2ttFile.WriteEntry(_headerStruct.hRunNumber,(E3Gps)*this,(E3RecoEvent) *this);
 			}
 		}
 	}
@@ -180,13 +189,13 @@ std::ostream& E3Run::writeHeaderInfo(std::ostream& os)
 {
 	os<<"****************** HEADER INFO *****************"<<std::endl<<std::endl;
 
-	os 	<< "Run Name	= " <<	_hRunName<<std::endl
-		<< "Run Number	= " <<	_hRunNumber<<std::endl
-		<< "Machine ID	= " <<	(UInt_16b)_hMachineID <<std::endl
-		<< "DAQ Version	= " <<	_hVersion<<std::endl
-		<< "DAQ Start	= " <<	_hStartTime <<std::endl
-		<< "Trg Mask	= " <<std::hex<<	(UInt_16b)_hTrgMask<<std::endl
-		<< "Nino Map	= " <<std::hex<<	_hNinoMap<<std::endl<<std::endl;
+	os 	<< "Run Name	= " <<	_headerStruct.hRunName<<std::endl
+		<< "Run Number	= " <<	_headerStruct.hRunNumber<<std::endl
+		<< "Machine ID	= " <<	(UInt_16b)_headerStruct.hMachineID <<std::endl
+		<< "DAQ Version	= " <<	_headerStruct.hVersion<<std::endl
+		<< "DAQ Start	= " <<	_headerStruct.hStartTime <<std::endl
+		<< "Trg Mask	= " <<std::hex<<	(UInt_16b)_headerStruct.hTrgMask<<std::endl
+		<< "Nino Map	= " <<std::hex<<	_headerStruct.hNinoMap<<std::endl<<std::endl;
 	return os;
 }
 
@@ -196,25 +205,25 @@ StatusCode E3Run::createOutFile(std::string OutDir)
 	std::string fileName;
 
 	fileName=OutDir;
-	fileName.append(_hRunName);
+	fileName.append(_headerStruct.hRunName);
 	fileName.append(".tim");
 	OutputOpening=_timFile.open(fileName);
 
 	fileName.clear();
 	fileName=OutDir;
-	fileName.append(_hRunName);
+	fileName.append(_headerStruct.hRunName);
 	fileName.append(".out");		
 	OutputOpening=_outFile.open(fileName);
 
 	fileName.clear();
 	fileName=OutDir;
-	fileName.append(_hRunName);
+	fileName.append(_headerStruct.hRunName);
 	fileName.append(".2tt");	
 	OutputOpening=_2ttFile.open(fileName);
 
 	fileName.clear();
 	fileName=OutDir;
-	fileName.append(_hRunName);
+	fileName.append(_headerStruct.hRunName);
 	fileName.append(".sum");
 	_sumFile.open(fileName.c_str());
 	fileName.append(".sum");

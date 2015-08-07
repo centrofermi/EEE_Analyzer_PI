@@ -1,6 +1,8 @@
 #ifndef BOSS__E3EVENT__LIBGUARD
 #define BOSS__E3EVENT__LIBGUARD
 
+
+
 class E3Event
 {
 

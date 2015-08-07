@@ -3,7 +3,7 @@
 
 
 
-E3RecoEvent::E3RecoEvent(void)
+E3RecoEvent::E3RecoEvent(void):_corrMatrix(3,corr_vector(24,std::make_pair(0,0)))
 {
 	clear();
 }
@@ -59,12 +59,12 @@ UInt_16b E3RecoEvent::findHits()
             // 
             // Correct the timing of the rising edges so that the difference
             // in the cable length is compensated for.
-			posPs = (posEdge->getPs()) + cableDelay[plane][0];
-			negPs = (negEdge->getPs()) + cableDelay[plane][1];
+			  posPs = (posEdge->getPs()) + cableDelay[plane][0] + _corrMatrix[plane][stripData->channel()].second;
+			negPs = (negEdge->getPs()) + cableDelay[plane][1]+ _corrMatrix[plane][stripData->channel()].first;
             // Calculate the time difference of the rising edges and
             // convert it into the coordinate along the strip.
             dPs = posPs - negPs;
-            y = dPs*0.5*PROP_SPEED/1000;
+            y = ((double)dPs)*0.5*PROP_SPEED/1000.0;
 
             // Is the y coordinate within the physical range?
 			if (abs(dPs) < DPSMAX) 

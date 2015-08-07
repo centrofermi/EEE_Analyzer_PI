@@ -3,12 +3,13 @@
 
 
 #define TDC_RESOLUTION  96
-#define PROP_SPEED	15
+#define PROP_SPEED	15.0
 #define DPSMAX	11400
 #define XOFFSET	12.
 #define STRIP_PITCH	3.875
 #define CLUSTERYSIZE   5.
 #define CLUSTERXSIZE   5.
+#define CLUSTERTSIZE   5.
 
 #define CHI2THR			10
 

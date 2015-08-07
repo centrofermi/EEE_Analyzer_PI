@@ -20,6 +20,13 @@
 #include <map>
 #include <iomanip>      // std::setprecision
 
+
+#include "TFile.h"
+#include "TTree.h"
+#include "TROOT.h"
+#include "TH1D.h"
+#include "TF1.h"
+
 #include "Constant.h"
 #include "intDef.h"
 #include "SourceStruct.h"
@@ -44,6 +51,8 @@
 #include "E3OutFileSUM.h"
 #include "E3OutFileTIM.h"
 #include "E3Run.h"
+#include "E3OutFileCAL.h"
+#include "E3Calib.h"
 
 
 

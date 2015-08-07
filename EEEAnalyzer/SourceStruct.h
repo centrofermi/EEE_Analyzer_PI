@@ -30,6 +30,20 @@ typedef struct daq
 	
 } t_daq;
 
+typedef struct header
+{
+	UInt_32b	hH,hT;        //header header and trailer
+	UInt_16b	hVersion;		//DAQ Version
+	UInt_64b	hStartTime;    //DAQ PC unix timestamp of run start
+	UInt_8b		hTrgMask;		//trigger mask
+	UInt_16b	hRunNameL;		//run name byte lenght
+	char		hRunName[128];	//run name
+	UInt_8b		hMachineID;	//identifier of the telescope ID
+	UInt_32b	hRunNumber;	//proggressive run number for the telescope
+	UInt_32b	hNinoMap;		//nino map
+	
+} t_header;
+
 typedef struct gps
 {
 	char 		gpgga_str[128];

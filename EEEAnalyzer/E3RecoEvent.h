@@ -2,6 +2,9 @@
 #define BOSS__E3RECOEVENT__LIBGUARD
 
 
+typedef std::vector<std::pair<double, double>>  corr_vector;
+typedef std::vector<corr_vector>  corr_matrix;
+
 class E3RecoEvent:public E3Event, public E3Gps
 {
 
@@ -14,12 +17,16 @@ public:
 	void clear();
 
 	
-
+	//get calibration costant
+	void importCalibration(corr_matrix matrix)  {_corrMatrix=matrix;};
 
 	 /// \brief Return the number of hits in a given plane.
 	UInt_16b numHits(UInt_16b plane);
 	/// \brief Return the total number of hits.
 	UInt_16b numHits() ;
+	
+	/// \brief Return the hit vector.
+	E3HitVec getHits(UInt_16b plane)	{return _hitVec[plane];};
 	
 
 	/// \brief Return the number of clusters in a given plane.
@@ -41,10 +48,15 @@ public:
 	//base event reconstruction function
 	UInt_16b reconstruct();
 
-private:
-
 	// find hits in the event
 	UInt_16b findHits();
+
+private:
+
+	
+	//time correction matrix(Ps)
+	corr_matrix _corrMatrix;
+
 
 	// find clusters in the event
 	UInt_16b findClusters();

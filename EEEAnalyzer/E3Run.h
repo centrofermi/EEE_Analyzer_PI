@@ -21,15 +21,8 @@ private:
 
 	//run header info
 	
-	UInt_32b	_hH,_hT;        //header header and trailer
-	UInt_16b	_hVersion;		//DAQ Version
-	UInt_64b	_hStartTime;    //DAQ PC unix timestamp of run start
-	UInt_8b		_hTrgMask;		//trigger mask
-	UInt_16b	_hRunNameL;		//run name byte lenght
-	char		_hRunName[128];	//run name
-	UInt_8b		_hMachineID;	//identifier of the telescope ID
-	UInt_32b	_hRunNumber;	//proggressive run number for the telescope
-	UInt_32b	_hNinoMap;		//nino map
+	t_header _headerStruct;
+	t_gps	_gpsStruct;
 
 	//run sum
 	UInt_32b _analyzed;										//events correctly analyzed
@@ -60,7 +53,6 @@ public:
 
 
 	//write info
-	std::ostream&	writeEventTim(std::ostream& os=std::cout);
 	std::ostream&	writeRunSum(std::ostream& os=std::cout);
 	std::ostream&	writeHeaderInfo(std::ostream& os=std::cout);
 };
