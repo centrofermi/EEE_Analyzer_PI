@@ -3,13 +3,16 @@
 
 E3Calib::E3Calib(void):_YTrend(3,TGraph(24)),_TTrend(3,TGraph(24)),_rawYMatrix(3,histo_vector(24)),_rawTMatrix(3,histo_vector(24)),
 						_meanYMatrix(3,mean_vector(24)),_meanTMatrix(3,mean_vector(24)),
-						_corrMatrix(3,corr_vector(24,std::make_pair(0,0))), _debug(true)
+						_corrMatrix(3,corr_vector(24,std::make_pair(0,0))), _debug(true),
+						_hitsTree("HitsTree","Tree with E3hits")
 {
+
 }
 
 E3Calib::E3Calib(bool debug):_YTrend(3,TGraph(24)),_TTrend(3,TGraph(24)),_rawYMatrix(3,histo_vector(24)),_rawTMatrix(3,histo_vector(24)),
 							_meanYMatrix(3,mean_vector(24)),_meanTMatrix(3,mean_vector(24)),
-							_corrMatrix(3,corr_vector(24,std::make_pair(0,0))),_debug(debug)
+							_corrMatrix(3,corr_vector(24,std::make_pair(0,0))),_debug(debug),
+						_hitsTree("HitsTree","Tree with E3hits")
 {
 }
 
@@ -18,7 +21,7 @@ E3Calib::~E3Calib(void)
 {
 }
 
-void E3Calib::initHisto()
+void E3Calib::init()
 {
 	for (int chIdx=0;chIdx<_rawYMatrix.size();chIdx++)
 	{
@@ -29,11 +32,23 @@ void E3Calib::initHisto()
 			_rawYMatrix[chIdx][strIdx].Reset();
 			_rawTMatrix[chIdx][strIdx].Reset();
 			_rawYMatrix[chIdx][strIdx].SetNameTitle(Form("yValueCh_%d_Str_%d",chIdx,strIdx),Form("yValueCh_%d_Str_%d",chIdx,strIdx));
-			_rawYMatrix[chIdx][strIdx].SetBins(50,-100,100);
+			_rawYMatrix[chIdx][strIdx].SetBins(100,-200,200);
 			_rawTMatrix[chIdx][strIdx].SetNameTitle(Form("tValueCh_%d_Str_%d",chIdx,strIdx),Form("tValueCh_%d_Str_%d",chIdx,strIdx));
 			_rawTMatrix[chIdx][strIdx].SetBins(250,0,500);
 		}
 	}
+
+	//initTree
+
+	 _hitsTree.Branch("eventNumber",&_hits_en   );
+     _hitsTree.Branch("x"			,&_hits_x    );
+     _hitsTree.Branch("y"			,&_hits_y    );
+     _hitsTree.Branch("z"			,&_hits_z    );
+     _hitsTree.Branch("THit"		,&_hits_THit );
+     _hitsTree.Branch("TOT_l"		,&_hits_TOT_l);
+     _hitsTree.Branch("TOT_r"		,&_hits_TOT_l);
+
+
 }
 
 void E3Calib::computeCorrections()
@@ -82,7 +97,7 @@ void E3Calib::computeCorrections()
 	}
 }
 
-void E3Calib::fillHisto()
+void E3Calib::fill()
 {
 	
 	for (int chIdx=0;chIdx<_rawYMatrix.size();chIdx++)
@@ -92,7 +107,22 @@ void E3Calib::fillHisto()
 		{
 			_rawYMatrix[chIdx][hitVec[hitIdx].channel()].Fill(hitVec[hitIdx].y());
 			_rawTMatrix[chIdx][hitVec[hitIdx].channel()].Fill(hitVec[hitIdx].hitTime());
+			if(_debug)
+			{
+				_hits_en   = getEvtNum();
+				_hits_x    = hitVec[hitIdx].x() ;
+				_hits_y    = hitVec[hitIdx].y() ;
+				_hits_z    = hitVec[hitIdx].z() ;
+				_hits_THit = hitVec[hitIdx].hitTime() ;
+				_hits_TOT_l=hitVec[hitIdx].tot(0);
+				_hits_TOT_l=hitVec[hitIdx].tot(1);
+
+				
+				_hitsTree.Fill();
+			}
 		}
+
+
 	}
 }
 
@@ -127,7 +157,7 @@ void E3Calib::getMean()
 corr_matrix E3Calib::runCalibration(std::string Source,std::string OutDir,bool debug)
 {
 
-	initHisto();
+	init();
 
 	_sourceStream.open(Source.c_str(),std::ios::binary);
 	if(!_sourceStream.good()) 
@@ -189,9 +219,9 @@ corr_matrix E3Calib::runCalibration(std::string Source,std::string OutDir,bool d
 		
 		if(unpack()==0)
 		{
-
+			
 			findHits();
-			fillHisto();
+			fill();
 			
 		}
 	}
@@ -223,6 +253,7 @@ void E3Calib::closeOutFile()
 				_rawTMatrix[chIdx][strIdx].Write();	
 			}
 		}
+		_hitsTree.Write();
 		_rootFile->Close();
 	}
 }

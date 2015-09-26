@@ -18,10 +18,22 @@ class E3Calib:public E3RecoEvent
 
 private:
 	
+	//variable for the hits tree
+
+	TTree  _hitsTree;
+
+	uint32_t  _hits_en;
+	double  _hits_x;
+	double  _hits_y;
+	double  _hits_z;
+	double  _hits_THit;
+	double  _hits_TOT_l;
+	double  _hits_TOT_r;
+
 	//Histo matrix
 	histo_matrix _rawYMatrix;
 	histo_matrix _rawTMatrix;
-	
+
 	graph_vector _YTrend;
 	graph_vector _TTrend;
 
@@ -53,10 +65,10 @@ private:
 	UInt_16b getEvent();
 	//retrive mean value from calibration histograms
 	void getMean();
-	//fill histograms with event data
-	void fillHisto();
-	// initilaize histogram matrix
-	void initHisto();
+	//fill histograms an tree with event data
+	void fill();
+	// initilaize histogram matrix and tree
+	void init();
 
 	//compute calibration
 	void computeCorrections();
