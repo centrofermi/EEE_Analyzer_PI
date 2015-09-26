@@ -13,4 +13,10 @@
 
 #define CHI2THR			10
 
+#define KEdgeRise	0
+#define KEdgeFall	1
+#define KSideLeft	0	
+#define	KSideRight	1
+
+
 #endif

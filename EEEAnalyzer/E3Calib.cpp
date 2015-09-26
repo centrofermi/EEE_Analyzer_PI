@@ -4,7 +4,7 @@
 E3Calib::E3Calib(void):_YTrend(3,TGraph(24)),_TTrend(3,TGraph(24)),_rawYMatrix(3,histo_vector(24)),_rawTMatrix(3,histo_vector(24)),
 						_meanYMatrix(3,mean_vector(24)),_meanTMatrix(3,mean_vector(24)),
 						_corrMatrix(3,corr_vector(24,std::make_pair(0,0))), _debug(true),
-						_hitsTree("HitsTree","Tree with E3hits")
+						_hitsTree("HitsTree","Tree with E3hits"),_rawHitsTree("RawHitsTree","Tree with E3RawHits")
 {
 
 }
@@ -12,7 +12,7 @@ E3Calib::E3Calib(void):_YTrend(3,TGraph(24)),_TTrend(3,TGraph(24)),_rawYMatrix(3
 E3Calib::E3Calib(bool debug):_YTrend(3,TGraph(24)),_TTrend(3,TGraph(24)),_rawYMatrix(3,histo_vector(24)),_rawTMatrix(3,histo_vector(24)),
 							_meanYMatrix(3,mean_vector(24)),_meanTMatrix(3,mean_vector(24)),
 							_corrMatrix(3,corr_vector(24,std::make_pair(0,0))),_debug(debug),
-						_hitsTree("HitsTree","Tree with E3hits")
+						_hitsTree("HitsTree","Tree with E3hits"),_rawHitsTree("RawHitsTree","Tree with E3RawHits")
 {
 }
 
@@ -47,8 +47,13 @@ void E3Calib::init()
      _hitsTree.Branch("THit"		,&_hits_THit );
      _hitsTree.Branch("TOT_l"		,&_hits_TOT_l);
      _hitsTree.Branch("TOT_r"		,&_hits_TOT_l);
-
-
+	 
+	 _rawHitsTree.Branch("eventNumber",&_hits_en);
+	 _rawHitsTree.Branch("plane",&_rawHit_plane);
+	 _rawHitsTree.Branch("strip",&_rawHit_strip);
+	 _rawHitsTree.Branch("time",&_rawHit_time);
+	 _rawHitsTree.Branch("side",&_rawHit_side);
+	 _rawHitsTree.Branch("edge",&_rawHit_edge);
 }
 
 void E3Calib::computeCorrections()
@@ -100,6 +105,8 @@ void E3Calib::computeCorrections()
 void E3Calib::fill()
 {
 	
+	_hits_en   = getEvtNum() ;
+	
 	for (int chIdx=0;chIdx<_rawYMatrix.size();chIdx++)
 	{
 		E3HitVec hitVec=getHits(chIdx);
@@ -109,9 +116,8 @@ void E3Calib::fill()
 			_rawTMatrix[chIdx][hitVec[hitIdx].channel()].Fill(hitVec[hitIdx].hitTime());
 			if(_debug)
 			{
-				_hits_en   = getEvtNum();
+				_hits_y    = hitVec[hitIdx].y() ; 
 				_hits_x    = hitVec[hitIdx].x() ;
-				_hits_y    = hitVec[hitIdx].y() ;
 				_hits_z    = hitVec[hitIdx].z() ;
 				_hits_THit = hitVec[hitIdx].hitTime() ;
 				_hits_TOT_l=hitVec[hitIdx].tot(0);
@@ -121,9 +127,48 @@ void E3Calib::fill()
 				_hitsTree.Fill();
 			}
 		}
-
-
 	}
+
+	//retrieve rawData
+	if (_debug)
+	{
+		E3StripDataVecIter stripData;
+		E3RawDataVecIter posEdge, negEdge;
+		E3RawDataVec posVec, negVec;
+		
+		// Loop over the telescope planes...
+
+		for (UInt_16b plane = 0; plane < 3; plane++) 
+		{
+			// Loop over the full strip data in the plane...
+			for (stripData = m_stripDataVec[plane].begin();
+			     stripData != m_stripDataVec[plane].end(); stripData++) 
+			{
+				_rawHit_plane=stripData->plane();
+				_rawHit_strip=stripData->channel();
+				// Double loop over the edges on the two plane end for the strip data.
+				posVec = stripData->posEdgeDigiVec();
+				negVec = stripData->negEdgeDigiVec();
+				for (posEdge = posVec.begin(); posEdge != posVec.end(); posEdge++)
+				{
+					_rawHit_side=KSideLeft;
+					_rawHit_time=posEdge->getPs();
+					if (posEdge->isRisingEdge()) _rawHit_edge=KEdgeRise;
+					else _rawHit_edge=KEdgeFall;
+					_rawHitsTree.Fill();
+				}
+			    for (negEdge = negVec.begin(); negEdge != negVec.end(); negEdge++)
+				{
+					_rawHit_side=KSideRight;
+					_rawHit_time=negEdge->getPs();
+					if (negEdge->isRisingEdge()) _rawHit_edge=KEdgeRise;
+					else _rawHit_edge=KEdgeFall;
+					_rawHitsTree.Fill();
+				}
+			}
+		}
+	}
+	
 }
 
 
@@ -254,6 +299,7 @@ void E3Calib::closeOutFile()
 			}
 		}
 		_hitsTree.Write();
+		_rawHitsTree.Write();
 		_rootFile->Close();
 	}
 }

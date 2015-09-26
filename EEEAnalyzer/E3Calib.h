@@ -17,7 +17,16 @@ class E3Calib:public E3RecoEvent
 {
 
 private:
+	//variable for the RawHits Tree
 	
+	TTree  _rawHitsTree;
+
+	uint32_t _rawHit_plane;
+	uint32_t _rawHit_strip;
+	uint64_t _rawHit_time;
+	uint32_t _rawHit_side;
+	uint32_t _rawHit_edge;
+
 	//variable for the hits tree
 
 	TTree  _hitsTree;
