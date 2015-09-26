@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
 
-E3Calib::E3Calib(void):_rawYMatrix(3,histo_vector(24)),_rawTMatrix(3,histo_vector(24)),
+E3Calib::E3Calib(void):_YTrend(3,TGraph(24)),_TTrend(3,TGraph(24)),_rawYMatrix(3,histo_vector(24)),_rawTMatrix(3,histo_vector(24)),
 						_meanYMatrix(3,mean_vector(24)),_meanTMatrix(3,mean_vector(24)),
 						_corrMatrix(3,corr_vector(24,std::make_pair(0,0))), _debug(true)
 {
 }
 
-E3Calib::E3Calib(bool debug):_rawYMatrix(3,histo_vector(24)),_rawTMatrix(3,histo_vector(24)),
+E3Calib::E3Calib(bool debug):_YTrend(3,TGraph(24)),_TTrend(3,TGraph(24)),_rawYMatrix(3,histo_vector(24)),_rawTMatrix(3,histo_vector(24)),
 							_meanYMatrix(3,mean_vector(24)),_meanTMatrix(3,mean_vector(24)),
 							_corrMatrix(3,corr_vector(24,std::make_pair(0,0))),_debug(debug)
 {
@@ -21,6 +21,9 @@ E3Calib::~E3Calib(void)
 void E3Calib::initHisto()
 {
 	for (int chIdx=0;chIdx<_rawYMatrix.size();chIdx++)
+	{
+		_YTrend[chIdx].SetNameTitle((Form("yTrendCh_%d",chIdx)),Form("y Trend Chamber_%d",chIdx));
+		_TTrend[chIdx].SetNameTitle((Form("tTrendCh_%d",chIdx)),Form("time Trend Chamber_%d",chIdx));
 		for (int strIdx=0;strIdx<_rawYMatrix.at(0).size();strIdx++)
 		{
 			_rawYMatrix[chIdx][strIdx].Reset();
@@ -28,8 +31,9 @@ void E3Calib::initHisto()
 			_rawYMatrix[chIdx][strIdx].SetNameTitle(Form("yValueCh_%d_Str_%d",chIdx,strIdx),Form("yValueCh_%d_Str_%d",chIdx,strIdx));
 			_rawYMatrix[chIdx][strIdx].SetBins(50,-100,100);
 			_rawTMatrix[chIdx][strIdx].SetNameTitle(Form("tValueCh_%d_Str_%d",chIdx,strIdx),Form("tValueCh_%d_Str_%d",chIdx,strIdx));
-			_rawTMatrix[chIdx][strIdx].SetBins(250,0,500);	
+			_rawTMatrix[chIdx][strIdx].SetBins(250,0,500);
 		}
+	}
 }
 
 void E3Calib::computeCorrections()
@@ -104,11 +108,16 @@ void E3Calib::getMean()
 				_rawTMatrix[chIdx][strIdx].Fit("gaus","Q");
 				_meanYMatrix[chIdx][strIdx] = _rawYMatrix[chIdx][strIdx].GetMean();
 				_meanTMatrix[chIdx][strIdx] = _rawTMatrix[chIdx][strIdx].GetFunction("gaus")->GetParameter(1);
+				
+				_YTrend[chIdx].SetPoint(strIdx,strIdx,_rawYMatrix[chIdx][strIdx].GetMean());
+				_TTrend[chIdx].SetPoint(strIdx,strIdx,_rawTMatrix[chIdx][strIdx].GetFunction("gaus")->GetParameter(1));
 			}
 			else
 			{
 				_meanYMatrix[chIdx][strIdx] = 0.0;
 				_meanTMatrix[chIdx][strIdx] = 0.0;
+				_YTrend[chIdx].SetPoint(strIdx,strIdx,0.0);
+				_TTrend[chIdx].SetPoint(strIdx,strIdx,0.0);
 			}
 		}
 }
@@ -205,12 +214,16 @@ void E3Calib::closeOutFile()
 	if (_debug)
 	{
 		for (int chIdx=0;chIdx<_rawYMatrix.size();chIdx++)
+		{
+			_YTrend[chIdx].Write();
+			_TTrend[chIdx].Write();
 			for (int strIdx=0;strIdx<_rawYMatrix.at(0).size();strIdx++)
 			{
 				_rawYMatrix[chIdx][strIdx].Write();
 				_rawTMatrix[chIdx][strIdx].Write();	
 			}
-			_rootFile->Close();
+		}
+		_rootFile->Close();
 	}
 }
 

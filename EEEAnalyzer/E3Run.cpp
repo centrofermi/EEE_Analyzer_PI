@@ -25,8 +25,8 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 	//run calibration
 
 	E3Calib caliber;
-	//caliber.importCalibration(caliber.runCalibration(Source,OutDir));
-	importCalibration(caliber.runCalibration(Source,OutDir));
+	caliber.importCalibration(caliber.runCalibration(Source,OutDir));
+	//importCalibration(caliber.runCalibration(Source,OutDir));
 
 
 	//start analysis

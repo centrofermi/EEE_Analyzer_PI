@@ -26,6 +26,7 @@
 #include "TROOT.h"
 #include "TH1D.h"
 #include "TF1.h"
+#include "TGraph.h"
 
 #include "Constant.h"
 #include "intDef.h"

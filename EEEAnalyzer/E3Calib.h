@@ -3,6 +3,7 @@
 
 
 
+typedef std::vector<TGraph>  graph_vector;
 
 typedef std::vector<TH1D>  histo_vector;
 typedef std::vector<histo_vector>  histo_matrix;
@@ -20,6 +21,10 @@ private:
 	//Histo matrix
 	histo_matrix _rawYMatrix;
 	histo_matrix _rawTMatrix;
+	
+	graph_vector _YTrend;
+	graph_vector _TTrend;
+
 	
 	//Mean matrix
 	mean_matrix _meanYMatrix;
