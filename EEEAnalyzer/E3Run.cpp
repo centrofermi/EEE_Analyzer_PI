@@ -23,11 +23,13 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 
 
 	//run calibration
-
+	
 	E3Calib caliber;
-	//caliber.importCalibration(caliber.runCalibration(Source,OutDir));
+//	E3Calib caliber2;
+	//caliber2.importCalibration(caliber.runCalibration(Source,OutDir));
+	//importCalibration(caliber2.runCalibration(Source,OutDir));
 	importCalibration(caliber.runCalibration(Source,OutDir));
-
+	exit(1);
 
 	//start analysis
 	_sourceStream.open(Source.c_str(),std::ios::binary);

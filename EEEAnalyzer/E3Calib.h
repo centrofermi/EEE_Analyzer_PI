@@ -54,6 +54,10 @@ private:
 	//Correction matrix
 	corr_matrix _corrMatrix;
 
+   // summary txt file
+	
+	ofstream _summary;
+
 
 	//in file
 	std::ifstream _sourceStream;

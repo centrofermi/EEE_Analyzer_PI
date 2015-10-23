@@ -69,7 +69,7 @@ UInt_16b E3RecoEvent::findHits()
             // Is the y coordinate within the physical range?
 			if (abs(dPs) < DPSMAX) 
 			{
-				x = (stripData->channel() - XOFFSET)*STRIP_PITCH;
+				x = (double)(stripData->channel() - XOFFSET) * (double) STRIP_PITCH;
 				z = planeDist[plane];
 				t = 0.001*(posPs + negPs)/2.;
 				// Calculate the TOT (this is done between pairs in the same

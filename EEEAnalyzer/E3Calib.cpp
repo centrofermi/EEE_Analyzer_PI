@@ -14,6 +14,7 @@ E3Calib::E3Calib(bool debug):_YTrend(3,TGraph(24)),_TTrend(3,TGraph(24)),_rawYMa
 							_corrMatrix(3,corr_vector(24,std::make_pair(0,0))),_debug(debug),
 						_hitsTree("HitsTree","Tree with E3hits"),_rawHitsTree("RawHitsTree","Tree with E3RawHits")
 {
+
 }
 
 
@@ -54,6 +55,10 @@ void E3Calib::init()
 	 _rawHitsTree.Branch("time",&_rawHit_time);
 	 _rawHitsTree.Branch("side",&_rawHit_side);
 	 _rawHitsTree.Branch("edge",&_rawHit_edge);
+
+	 //open summary file
+	 
+	_summary.open ("CorrSummary.txt", std::ios::app);
 }
 
 void E3Calib::computeCorrections()
@@ -77,6 +82,8 @@ void E3Calib::computeCorrections()
 			}
 		}
 		hit_time/=valid_strips;
+		
+		_summary<<hit_time<<"	";
 		//std::cout<<"mean hit time "<< hit_time<<std::endl;
 
 		//adjust strip offset		
@@ -174,6 +181,8 @@ void E3Calib::fill()
 
 void E3Calib::getMean()
 {
+
+
 	for (int chIdx=0;chIdx<_rawYMatrix.size();chIdx++)
 		for (int strIdx=0;strIdx<_rawYMatrix.at(0).size();strIdx++)
 		{
@@ -181,11 +190,25 @@ void E3Calib::getMean()
 			{
 
 				_rawTMatrix[chIdx][strIdx].Fit("gaus","Q");
-				_meanYMatrix[chIdx][strIdx] = _rawYMatrix[chIdx][strIdx].GetMean();
-				_meanTMatrix[chIdx][strIdx] = _rawTMatrix[chIdx][strIdx].GetFunction("gaus")->GetParameter(1);
 				
-				_YTrend[chIdx].SetPoint(strIdx,strIdx,_rawYMatrix[chIdx][strIdx].GetMean());
-				_TTrend[chIdx].SetPoint(strIdx,strIdx,_rawTMatrix[chIdx][strIdx].GetFunction("gaus")->GetParameter(1));
+				double YMean=_rawYMatrix[chIdx][strIdx].GetMean();
+				double TMean=_rawTMatrix[chIdx][strIdx].GetFunction("gaus")->GetParameter(1);
+
+				//save correction
+
+				_meanYMatrix[chIdx][strIdx] = YMean;
+				_meanTMatrix[chIdx][strIdx] = TMean;
+
+				//store correction to Tgraph
+				
+				_YTrend[chIdx].SetPoint(strIdx,strIdx,YMean);
+				_TTrend[chIdx].SetPoint(strIdx,strIdx,TMean);
+
+				//add to summary file
+				
+				_summary<<YMean<<"	";
+				_summary<<TMean<<"	";
+
 			}
 			else
 			{
@@ -193,6 +216,13 @@ void E3Calib::getMean()
 				_meanTMatrix[chIdx][strIdx] = 0.0;
 				_YTrend[chIdx].SetPoint(strIdx,strIdx,0.0);
 				_TTrend[chIdx].SetPoint(strIdx,strIdx,0.0);
+
+				
+				double YMean=0.0;
+				double TMean=0.0;
+				
+				_summary<<YMean<<"	";
+				_summary<<TMean<<"	";
 			}
 		}
 }
@@ -301,6 +331,10 @@ void E3Calib::closeOutFile()
 		_hitsTree.Write();
 		_rawHitsTree.Write();
 		_rootFile->Close();
+		
+		_summary<<std::endl;
+		
+		_summary.close();
 	}
 }
 

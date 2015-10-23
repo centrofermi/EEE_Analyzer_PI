@@ -20,7 +20,6 @@
 #include <map>
 #include <iomanip>      // std::setprecision
 
-
 #include "TFile.h"
 #include "TTree.h"
 #include "TROOT.h"
