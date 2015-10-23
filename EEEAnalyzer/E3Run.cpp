@@ -43,38 +43,44 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
     _sourceStream.seekg (0, _sourceStream.beg);
 	
 
-
+	///////////////////////////////////////////////////
 	// header parsing (contains gps inforamtion)
+	///////////////////////////////////////////////////
 
 	E3Track bestTrack;
 
-	do
-	{
-		_sourceStream.read((char*)&_headerStruct.hH, sizeof(_headerStruct.hH));  //fix for standard EEE header
-		//std::cout<< "Found "<<_hH<<std::endl;
-	} while (_headerStruct.hH!=0xfbfbfbfb && (_sourceStream.tellg()<FileLength));
+	//read Header
+	_sourceStream.read((char*)&_headerStruct, sizeof(_headerStruct));  
 
-	_sourceStream.read((char*)&_headerStruct.hVersion,	sizeof(_headerStruct.hVersion)		);
-	_sourceStream.read((char*)&_headerStruct.hMachineID,sizeof(_headerStruct.hMachineID)		);
-	_sourceStream.read((char*)&_headerStruct.hRunNumber,sizeof(_headerStruct.hRunNumber)		);
-	_sourceStream.read((char*)&_headerStruct.hRunNameL,	sizeof(_headerStruct.hRunNameL)		);
-	_sourceStream.read((char*)&_headerStruct.hRunName,	_headerStruct.hRunNameL				);
-	_sourceStream.read((char*)&_headerStruct.hTrgMask,	sizeof(_headerStruct.hTrgMask)		);
-	_sourceStream.read((char*)&_headerStruct.hNinoMap,	sizeof(_headerStruct.hNinoMap)		);
-	_sourceStream.read((char*)&_headerStruct.hStartTime,sizeof(_headerStruct.hStartTime)		);
-	_sourceStream.read((char*)&_gpsStruct,		sizeof(t_gps)			);
-	_sourceStream.read((char*)&_headerStruct.hT,		sizeof(_headerStruct.hT)				);
+	if (_headerStruct.Head_begin != 0xfbfbfbfb)
+	{
+		std::cout<< "Unknown file format..aborting"<<std::endl;
+		return;
+	}
+
+	//print Header Info
+	writeHeaderInfo(std::cout);
+
+	
+	//read Architecture
+	_sourceStream.read((char*)&_archStruct, sizeof(_archStruct));
+	writeArchInfo(std::cout); 
+
+	//read GPS
+	_sourceStream.read((char*)&_gpsStruct, sizeof(_gpsStruct)); 
+	//set and print Gps info
+	setGpsStruct(_gpsStruct);
+	writeGpsInfo(std::cout);
+
+	//read WS
+	_sourceStream.read((char*)&_wsStruct, sizeof(_wsStruct)); 
+	//set and print Gps info
+	writeWsInfo(std::cout);
+	
 
 	//set event gps timestamp
 	setGpsTimestamp(getGpsE3Timestamp());
 
-	//print Header Info
-
-	writeHeaderInfo(std::cout);
-	
-	//set and print Gps info
-	setGpsStruct(_gpsStruct);
-	writeGpsInfo(std::cout);
 
 	//generate output files
 	if(createOutFile(OutDir)) 
@@ -91,7 +97,7 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 
 	//start event loop
 
-	setNinoMap(_headerStruct.hNinoMap);
+	setNinoMap(_archStruct.NINO_map);
 	_analyzed=0;
 	int GoodEvent=0;
 	int trackfound=0;
@@ -119,9 +125,9 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 				}
 				
 				//write event
-				_outFile.WriteEntry(_headerStruct.hRunNumber,(E3Gps)*this,(E3RecoEvent) *this);
-				_timFile.WriteEntry(_headerStruct.hRunNumber,(E3Gps)*this,(E3RecoEvent) *this);
-				_2ttFile.WriteEntry(_headerStruct.hRunNumber,(E3Gps)*this,(E3RecoEvent) *this);
+				_outFile.WriteEntry(_headerStruct.runNumber,(E3Gps)*this,(E3RecoEvent) *this);
+				_timFile.WriteEntry(_headerStruct.runNumber,(E3Gps)*this,(E3RecoEvent) *this);
+				_2ttFile.WriteEntry(_headerStruct.runNumber,(E3Gps)*this,(E3RecoEvent) *this);
 			}
 		}
 	}
@@ -189,13 +195,11 @@ std::ostream& E3Run::writeHeaderInfo(std::ostream& os)
 {
 	os<<"****************** HEADER INFO *****************"<<std::endl<<std::endl;
 
-	os 	<< "Run Name	= " <<	_headerStruct.hRunName<<std::endl
-		<< "Run Number	= " <<	_headerStruct.hRunNumber<<std::endl
-		<< "Machine ID	= " <<	(UInt_16b)_headerStruct.hMachineID <<std::endl
-		<< "DAQ Version	= " <<	_headerStruct.hVersion<<std::endl
-		<< "DAQ Start	= " <<	_headerStruct.hStartTime <<std::endl
-		<< "Trg Mask	= " <<std::hex<<	(UInt_16b)_headerStruct.hTrgMask<<std::endl
-		<< "Nino Map	= " <<std::hex<<	_headerStruct.hNinoMap<<std::endl<<std::endl;
+	os 	<< "Run Name	= " <<	_headerStruct.name<<std::endl
+		<< "Run Number	= " <<	_headerStruct.runNumber<<std::endl
+		<< "DAQ Version	= " <<	_headerStruct.version<<std::endl
+		<< "DAQ Start	= " <<	_headerStruct.StartTime <<std::endl
+		<< "Trg Mask	= " <<std::hex<<	(UInt_16b)_headerStruct.trigger<<std::endl<<std::endl;
 	return os;
 }
 
@@ -205,25 +209,25 @@ StatusCode E3Run::createOutFile(std::string OutDir)
 	std::string fileName;
 
 	fileName=OutDir;
-	fileName.append(_headerStruct.hRunName);
+	fileName.append(_headerStruct.name);
 	fileName.append(".tim");
 	OutputOpening=_timFile.open(fileName);
 
 	fileName.clear();
 	fileName=OutDir;
-	fileName.append(_headerStruct.hRunName);
+	fileName.append(_headerStruct.name);
 	fileName.append(".out");		
 	OutputOpening=_outFile.open(fileName);
 
 	fileName.clear();
 	fileName=OutDir;
-	fileName.append(_headerStruct.hRunName);
+	fileName.append(_headerStruct.name);
 	fileName.append(".2tt");	
 	OutputOpening=_2ttFile.open(fileName);
 
 	fileName.clear();
 	fileName=OutDir;
-	fileName.append(_headerStruct.hRunName);
+	fileName.append(_headerStruct.name);
 	fileName.append(".sum");
 	_sumFile.open(fileName.c_str());
 	fileName.append(".sum");
@@ -232,6 +236,53 @@ StatusCode E3Run::createOutFile(std::string OutDir)
 	if (!(_timFile.good() && _2ttFile.good() && _sumFile.good())) OutputOpening=FAILURE;
 
 	return OutputOpening;
+}
+
+
+std::ostream&	E3Run::writeArchInfo(std::ostream& os)
+{
+
+	os<<"****************** ARCHITECTURE INFO *****************"<<std::endl<<std::endl;
+
+	os	<<"Plane Z Top		=	" << _archStruct.planeDist[0]<<std::endl
+		<<"Plane Z Mid		=	" << _archStruct.planeDist[1]<<std::endl
+		<<"Plane Z Bot		=	" << _archStruct.planeDist[2]<<std::endl
+		<<"Cable TR Length		=	" << _archStruct.cableLength[0]<<std::endl
+		<<"Cable TL Length		=	" << _archStruct.cableLength[1]<<std::endl
+		<<"Cable MR Length		=	" << _archStruct.cableLength[2]<<std::endl
+		<<"Cable ML Length		=	" << _archStruct.cableLength[3]<<std::endl
+		<<"Cable BR Length		=	" << _archStruct.cableLength[4]<<std::endl
+		<<"Cable BL Length		=	" << _archStruct.cableLength[5]<<std::endl
+		<<"Fec TR Type		=	" << (UInt_32b) _archStruct.fecType[0]<<std::endl
+		<<"Fec TL Type		=	" << (UInt_32b) _archStruct.fecType[1]<<std::endl
+		<<"Fec MR Type		=	" << (UInt_32b) _archStruct.fecType[2]<<std::endl
+		<<"Fec ML Type		=	" << (UInt_32b) _archStruct.fecType[3]<<std::endl
+		<<"Fec BR Type		=	" << (UInt_32b) _archStruct.fecType[4]<<std::endl
+		<<"Fec BL Type		=	" << (UInt_32b) _archStruct.fecType[5]<<std::endl
+		<<"Machine ID		=	" <<(UInt_32b) _archStruct.machineID<<std::endl
+		<<"Mapping			=	" << _archStruct.NINO_map<<std::endl
+		<<"Board Active		=	" << (UInt_32b)_archStruct.Board_plug<<std::endl
+		<<"Plane Thickness		=	" << _archStruct.planeThick<<std::endl
+		<<"Angle			=	" << _archStruct.orientation<<std::endl
+		<<"Signal Speed		=	" << _archStruct.sigSpeed<<std::endl
+		<<"Strip Length		=	" << _archStruct.stripLength<<std::endl<<std::endl;
+
+	return os;
+
+}
+
+std::ostream& E3Run::writeWsInfo(std::ostream& os)
+{
+	os<<"****************** WS INFO *****************"<<std::endl<<std::endl;
+
+	os 	<< "Block Length		=	" <<	_wsStruct.byte<<std::endl
+		<< "Block ID		=	" <<   _wsStruct.id<<std::endl
+		<< "Date			=	" <<   _wsStruct.year<<"-"<<_wsStruct.month<<"-"<<_wsStruct.day<<std::endl
+		<< "Time			=	" <<   _wsStruct.hours<<":"<<_wsStruct.minute<<std::endl
+		<< "Outdoor Temp		=	" <<	_wsStruct.outTemp<<std::endl
+		<< "Indoor Temp		=	" <<	_wsStruct.inTemp<<std::endl
+		<< "Pressure		=	" <<	_wsStruct.pressure<<std::endl<<std::endl;
+	return os;
 }
 
 std::ostream& E3Run::writeRunSum(std::ostream& os)

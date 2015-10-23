@@ -22,7 +22,9 @@ private:
 	//run header info
 	
 	t_header _headerStruct;
-	t_gps	_gpsStruct;
+	t_gps	 _gpsStruct;
+	t_arch   _archStruct;
+	t_ws	 _wsStruct;
 
 	//run sum
 	UInt_32b _analyzed;										//events correctly analyzed
@@ -55,6 +57,8 @@ public:
 	//write info
 	std::ostream&	writeRunSum(std::ostream& os=std::cout);
 	std::ostream&	writeHeaderInfo(std::ostream& os=std::cout);
+	std::ostream&	writeArchInfo(std::ostream& os=std::cout);
+	std::ostream&	writeWsInfo(std::ostream& os=std::cout);
 };
 
 #endif

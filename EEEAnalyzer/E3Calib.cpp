@@ -217,30 +217,32 @@ corr_matrix E3Calib::runCalibration(std::string Source,std::string OutDir,bool d
 	UInt_32b FileLength = _sourceStream.tellg();
     _sourceStream.seekg (0, _sourceStream.beg);
 	
-	// header parsing (contains gps inforamtion)
+	//read Header
+	_sourceStream.read((char*)&_headerStruct, sizeof(_headerStruct));  
 
-	do
+	if (_headerStruct.Head_begin != 0xfbfbfbfb)
 	{
-		_sourceStream.read((char*)&_headerStruct.hH, sizeof(_headerStruct.hH));  //fix for standard EEE header
-		//std::cout<< "Found "<<_hH<<std::endl;
-	} while (_headerStruct.hH!=0xfbfbfbfb && (_sourceStream.tellg()<FileLength));
+		std::cout<< "Unknown file format..aborting"<<std::endl;
+		return _corrMatrix;
+	}
 
-	_sourceStream.read((char*)&_headerStruct.hVersion,	sizeof(_headerStruct.hVersion)		);
-	_sourceStream.read((char*)&_headerStruct.hMachineID,sizeof(_headerStruct.hMachineID)		);
-	_sourceStream.read((char*)&_headerStruct.hRunNumber,sizeof(_headerStruct.hRunNumber)		);
-	_sourceStream.read((char*)&_headerStruct.hRunNameL,	sizeof(_headerStruct.hRunNameL)		);
-	_sourceStream.read((char*)&_headerStruct.hRunName,	_headerStruct.hRunNameL				);
-	_sourceStream.read((char*)&_headerStruct.hTrgMask,	sizeof(_headerStruct.hTrgMask)		);
-	_sourceStream.read((char*)&_headerStruct.hNinoMap,	sizeof(_headerStruct.hNinoMap)		);
-	_sourceStream.read((char*)&_headerStruct.hStartTime,sizeof(_headerStruct.hStartTime)		);
-	_sourceStream.read((char*)&_gpsStruct,		sizeof(t_gps)			);
-	_sourceStream.read((char*)&_headerStruct.hT,		sizeof(_headerStruct.hT)				);
+
+	
+	//read Architecture
+	_sourceStream.read((char*)&_archStruct, sizeof(_archStruct));
+
+	//read GPS
+	_sourceStream.read((char*)&_gpsStruct, sizeof(_gpsStruct)); 
+	//set and print Gps info
+	setGpsStruct(_gpsStruct);
+
+	//read WS
+	_sourceStream.read((char*)&_wsStruct, sizeof(_wsStruct)); 
+	//set and print Gps info
+	
 
 	//set event gps timestamp
 	setGpsTimestamp(getGpsE3Timestamp());
-
-	//set and print Gps info
-	setGpsStruct(_gpsStruct);
 
 	if(createOutFile(OutDir)) 
 	{
@@ -250,7 +252,7 @@ corr_matrix E3Calib::runCalibration(std::string Source,std::string OutDir,bool d
 	}
 	std::cout<<"Calibrating..."<<std::endl;
 
-	setNinoMap(_headerStruct.hNinoMap);
+	setNinoMap(_archStruct.NINO_map);
 	
 	std::cout<<"Skanning events....."<< std::endl;
 	while (_sourceStream.tellg()<FileLength)
@@ -319,7 +321,7 @@ StatusCode E3Calib::createOutFile(std::string OutDir)
 
 		fileName.clear();
 		fileName=OutDir;
-		fileName.append(_headerStruct.hRunName);	
+		fileName.append(_headerStruct.name);	
 		fileName.append("_cde.root");
 		_rootFile=new TFile(fileName.c_str(),"RECREATE");		
 		if(!(_rootFile->IsOpen())) 

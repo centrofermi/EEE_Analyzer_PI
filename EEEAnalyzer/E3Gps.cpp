@@ -72,10 +72,14 @@ std::ostream&  E3Gps::writeGpsInfo(std::ostream& os)
 	os<<"******************* GPS INFO *******************"<<std::endl<<std::endl;
 
 	os 	<< "Quality		= " <<std::dec<< (int)_gpsStruct.quality<<std::endl
+		<< "Satellite	= " << (UInt_32b)_gpsStruct.satellite<<std::endl
 		<< "UTC Date	= " << _gpsStruct.UTCdate<<std::endl
 		<< "UTC Time	= " << _gpsStruct.UTCtime <<std::endl
-		<< "Latitude	= " << (UInt_32b)(_gpsStruct.latitude/100) + ((fmod(_gpsStruct.latitude,100)/60)) <<std::endl
-		<< "Longitude	= " << (UInt_32b)(_gpsStruct.longitude/100) + ((fmod(_gpsStruct.longitude,100)/60)) <<std::endl
+		<< "Latitude	= " << (UInt_32b)(_gpsStruct.latitude/100) + ((fmod(_gpsStruct.latitude,100)/60)) 
+				<<"  "<<_gpsStruct.latHem<< std::endl
+		<< "Longitude	= " << (UInt_32b)(_gpsStruct.longitude/100) + ((fmod(_gpsStruct.longitude,100)/60)) 
+				<<"  "<<_gpsStruct.lonHem<< std::endl
+		<< "Altitude	= " << (UInt_32b) _gpsStruct.altitude<<std::endl
 		<< "EEE time	= " << _gpsE3Timestamp<<std::endl
 	 	<< "GPGGA		= " << _gpsStruct.gpgga_str<<std::endl
 		<< "GPRMC		= " << _gpsStruct.gprmc_str<<std::endl<<std::endl;

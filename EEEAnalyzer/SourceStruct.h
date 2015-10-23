@@ -32,15 +32,13 @@ typedef struct daq
 
 typedef struct header
 {
-	UInt_32b	hH,hT;        //header header and trailer
-	UInt_16b	hVersion;		//DAQ Version
-	UInt_64b	hStartTime;    //DAQ PC unix timestamp of run start
-	UInt_8b		hTrgMask;		//trigger mask
-	UInt_16b	hRunNameL;		//run name byte lenght
-	char		hRunName[128];	//run name
-	UInt_8b		hMachineID;	//identifier of the telescope ID
-	UInt_32b	hRunNumber;	//proggressive run number for the telescope
-	UInt_32b	hNinoMap;		//nino map
+	UInt_32b Head_begin;
+    UInt_16b version;
+    UInt_32b runNumber;
+	char name[128];
+	UInt_8b trigger;
+	UInt_64b StartTime;
+	UInt_32b Head_end;
 	
 } t_header;
 
@@ -49,17 +47,45 @@ typedef struct gps
 	char 		gpgga_str[128];
 	char 		gprmc_str[128];
 	UInt_8b  	quality;
-	double 		UTCdate;
+	UInt_8b  	satellite;
+	double		UTCdate;
 	double		UTCtime;
-	double 		latitude;
+	double		latitude;
 	double		longitude;
+	double		altitude;
 	char 		latHem;
 	char		lonHem;
 } t_gps;
 
+typedef struct ws
+{
+	UInt_32b byte;
+	UInt_32b id;
+	UInt_32b year;
+	UInt_32b month;
+	UInt_32b day;
+	UInt_32b hours;
+	UInt_32b minute;
+	UInt_32b inTemp;
+	UInt_32b outTemp;
+	UInt_32b pressure;
+} t_ws;
 
-
-
+typedef struct arch
+{
+	double planeDist[3];
+	UInt_8b machineID;
+	UInt_32b NINO_map;
+	UInt_8b Board_plug;
+	double planeThick;
+	double orientation;
+	double sigSpeed;
+	double stripPitch;
+	double stripLength;
+	double cableLength[6];	
+	UInt_8b fecType[6];
+	
+} t_arch;
 
 
 #endif

@@ -62,6 +62,8 @@ private:
 	TFile*			_rootFile;
 	t_header		_headerStruct;
 	t_gps			_gpsStruct;
+	t_arch			_archStruct;
+	t_ws			_wsStruct;
 
 	bool			_debug;
 
