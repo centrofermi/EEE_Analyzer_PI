@@ -54,6 +54,8 @@ public:
 	/// \brief Return the total number of strip data in the event.
 	UInt_16b numStripData();
 
+	inline E3StripDataVec getStripDataVector(UInt_16b plane)  {return m_stripDataVec[plane];};
+
 	UInt_16b unpack();
 
 

@@ -21,7 +21,31 @@ int main(int argc, char* argv[])
 	E3Run TheRun;
 	//TheRun.analyzeRun(sourceFile,OutDir);
 	TheRun.open(sourceFile);
-	TheRun.analyzeEvent();
+	
+	//retrive struct
+	TheRun.getArchStruct();
+	TheRun.getGpsStruct();
+	TheRun.getHeaderStruct();
+	TheRun.getWsStruct();
+
+	while(TheRun.analyzeEvent()==0)
+	{
+		cout<< "EVENT NUMBER "<<TheRun.getEvtNum()-1<<endl;
+	  //get strip data
+		E3StripDataVec vector=TheRun.getStripDataVector(kTopPlane);
+		for (int i = 0;i< vector.size();i++)
+		{
+			vector.at(i).fillStream(std::cout);
+			cout<<endl;
+		}
+		TheRun.getStripDataVector(kMidPlane);
+		TheRun.getStripDataVector(kBotPlane);	
+
+	 // get event time information
+
+
+	}
+
 
 	
 	return 0;

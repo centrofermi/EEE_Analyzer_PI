@@ -101,27 +101,28 @@ UInt_16b E3Run::analyzeEvent()
 		return 2;
 	}
 
-	if (_sourceStream.tellg()<_fileLength)
+	if (_sourceStream.tellg()>=_fileLength)
 	{
 		std::cout<< "End of File reached"<< std::endl;
 		return 1;
-	}
-
-	
+	}	
 		
 	E3RecoEvent::clear();
 	
 	if(getEvent()==1)
-		{
-			std::cout<<"Event stream: unexpected fail to read file"<<std::endl;
-			return 2;
-		}
-		if(unpack()==0)
-		{
-			_analyzed++;
-			std::cout<<_analyzed<<std::endl;
-		}
+	{
+		std::cout<<"Event stream: unexpected fail to read file"<<std::endl;
+		return 3;
 	}
+	if(unpack()!=0)
+	{
+		std::cout<<"Unpack Failed"<<std::endl;
+		return 4;
+	}
+
+	_analyzed++;
+	//std::cout<<_analyzed<<std::endl;
+	
 	return 0;
 
 
