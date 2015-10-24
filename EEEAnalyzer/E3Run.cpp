@@ -11,11 +11,120 @@ E3Run::E3Run(void):_gHitMult(3,std::vector< UInt_32b>(1000,0)),_gSumHitMult(3000
 	_gLowClusterMult=0;
 	_gMediumClusterMult=0;
 	_gHighClusterMult=0;
+	_headerParsed=false;
 }
 
 
 E3Run::~E3Run(void)
 {
+}
+
+void E3Run::open(std::string Source,std::string Option)
+{
+
+	bool verbose=false;
+
+	if (strcmp("v",Option.c_str())==0) verbose=true;  
+	
+	
+	_sourceStream.open(Source.c_str(),std::ios::binary);
+
+	if(!_sourceStream.good()) 
+	{
+
+		std::cout<<"Unable to open input files...reconstruction aborted"<<std::endl;
+		return;
+	}
+
+	//get file size
+    _sourceStream.seekg (0, _sourceStream.end);
+	_fileLength = _sourceStream.tellg();
+    _sourceStream.seekg (0, _sourceStream.beg);
+	
+
+	///////////////////////////////////////////////////
+	// header parsing (contains gps inforamtion)
+	///////////////////////////////////////////////////
+
+
+	//read Header
+	_sourceStream.read((char*)&_headerStruct, sizeof(_headerStruct));  
+
+	if (_headerStruct.Head_begin != 0xfbfbfbfb)
+	{
+		std::cout<< "Unknown file format..aborting"<<std::endl;
+		return;
+	}
+
+	//print Header Info
+	if(verbose) writeHeaderInfo(std::cout);
+
+	
+	//read Architecture
+	_sourceStream.read((char*)&_archStruct, sizeof(_archStruct));
+	if(verbose) writeArchInfo(std::cout); 
+
+	//read GPS
+	_sourceStream.read((char*)&_gpsStruct, sizeof(_gpsStruct)); 
+	//set and print Gps info
+	 setGpsStruct(_gpsStruct);
+	if(verbose)writeGpsInfo(std::cout);
+
+	//read WS
+	_sourceStream.read((char*)&_wsStruct, sizeof(_wsStruct)); 
+	//set and print Gps info
+	if(verbose) writeWsInfo(std::cout);
+	
+
+	//set event gps timestamp
+	setGpsTimestamp(getGpsE3Timestamp());
+	//set nino Mapping
+	setNinoMap(_archStruct.NINO_map);
+
+	
+	_headerParsed=true;
+	_analyzed=0;
+
+
+}
+
+void E3Run::close()
+{
+	_sourceStream.close();
+}
+
+UInt_16b E3Run::analyzeEvent()
+{
+	if (!_headerParsed)
+	{
+		std::cout<< "no header parsed yet..."<< std::endl;
+		return 2;
+	}
+
+	if (_sourceStream.tellg()<_fileLength)
+	{
+		std::cout<< "End of File reached"<< std::endl;
+		return 1;
+	}
+
+	
+		
+	E3RecoEvent::clear();
+	
+	if(getEvent()==1)
+		{
+			std::cout<<"Event stream: unexpected fail to read file"<<std::endl;
+			return 2;
+		}
+		if(unpack()==0)
+		{
+			_analyzed++;
+			std::cout<<_analyzed<<std::endl;
+		}
+	}
+	return 0;
+
+
 }
 
 void E3Run::analyzeRun(std::string Source,std::string OutDir)
@@ -39,7 +148,7 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 	}
 	//get file size
     _sourceStream.seekg (0, _sourceStream.end);
-	UInt_32b FileLength = _sourceStream.tellg();
+	_fileLength = _sourceStream.tellg();
     _sourceStream.seekg (0, _sourceStream.beg);
 	
 
@@ -101,7 +210,7 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 	_analyzed=0;
 	int GoodEvent=0;
 	int trackfound=0;
-	while (_sourceStream.tellg()<FileLength)
+	while (_sourceStream.tellg()<_fileLength)
 	{
 		E3RecoEvent::clear();
 		if(getEvent()==1)

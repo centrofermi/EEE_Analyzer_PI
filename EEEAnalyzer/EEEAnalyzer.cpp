@@ -19,7 +19,10 @@ int main(int argc, char* argv[])
 	std::string OutDir = sourceFile.substr(0,sourceFile.find_last_of("\\/",sourceFile.size()-2)+1);
 
 	E3Run TheRun;
-	TheRun.analyzeRun(sourceFile,OutDir);
+	//TheRun.analyzeRun(sourceFile,OutDir);
+	TheRun.open(sourceFile);
+	TheRun.analyzeEvent();
+
 	
 	return 0;
 }

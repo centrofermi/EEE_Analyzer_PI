@@ -28,6 +28,8 @@ private:
 
 	//run sum
 	UInt_32b _analyzed;										//events correctly analyzed
+	bool _headerParsed;
+	UInt_32b _fileLength;
 
 	std::vector<std::vector<UInt_32b> >  _gHitMult;	//hits multiplicity for each chamber
 	std::vector<UInt_32b>  _gSumHitMult;				//hits multiplicity for each event
@@ -50,8 +52,19 @@ public:
 	E3Run(void);
 	~E3Run(void);
 
-	
+	//analyze run
 	void analyzeRun(std::string Source,std::string OutDir);
+	//open file and get header information
+	void open(std::string Source,std::string Option="");
+	//scan next event in file (if header already parsed)
+	UInt_16b analyzeEvent();
+	//close input file
+	void	close();
+
+
+	inline t_header getHeaderStruct()	{return _headerStruct;};
+	inline t_arch   getArchStruct()     {return _archStruct;};
+	inline t_ws		getWsStruct()	    {return _wsStruct;};
 
 
 	//write info
