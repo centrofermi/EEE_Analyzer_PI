@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "E3Calib.h"
 
 
 E3Calib::E3Calib(void):_YTrend(3,TGraph(24)),_TTrend(3,TGraph(24)),_rawYMatrix(3,histo_vector(24)),_rawTMatrix(3,histo_vector(24)),

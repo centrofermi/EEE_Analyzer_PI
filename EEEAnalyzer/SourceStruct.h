@@ -1,5 +1,6 @@
 #ifndef BOSS__SOURCESTRUCT__LIBGUARD
 #define BOSS__SOURCESTRUCT__LIBGUARD
+#include "intDef.h" 
 
 typedef struct daq
 {

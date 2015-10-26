@@ -20,6 +20,7 @@
 
 #ifndef BOSS__E3HIT__LIBGUARD
 #define BOSS__E3HIT__LIBGUARD
+#include "E3Point.h"
 
 /*! \class E3Hit
   \brief Class describing a hit in the detector.

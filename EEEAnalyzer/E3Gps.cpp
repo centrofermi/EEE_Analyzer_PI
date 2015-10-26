@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "E3Gps.h"
+#include <iostream>
+#include "E3Track.h"
 
 
 UInt_64b datetime2seconds(int year, int month, int day,

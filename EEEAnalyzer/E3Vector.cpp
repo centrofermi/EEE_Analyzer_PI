@@ -20,6 +20,7 @@
 
 
 #include "stdafx.h"
+#include "E3Vector.h" 
 
 
 E3Vector::E3Vector() :

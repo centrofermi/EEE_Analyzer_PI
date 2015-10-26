@@ -20,6 +20,7 @@
 
 #ifndef BOSS__E3VECTOR__LIBGUARD
 #define BOSS__E3VECTOR__LIBGUARD
+#include "E3Point.h" 
 
 
 /// \brief Conversion from and to radians/degrees.

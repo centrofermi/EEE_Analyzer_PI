@@ -1,5 +1,8 @@
 #ifndef BOSS__E3CALIB__LIBGUARD
 #define BOSS__E3CALIB__LIBGUARD
+#include "TGraph.h"
+#include "E3RecoEvent.h"
+#include "E3StatusCode.h"
 
 
 

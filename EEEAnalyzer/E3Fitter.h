@@ -20,6 +20,8 @@
 
 #ifndef BOSS__E3FITTER__LIBGUARD
 #define BOSS__E3FITTER__LIBGUARD
+#include <iostream>
+#include "E3Track.h"
 
 
 /*! \class E3FittingTool

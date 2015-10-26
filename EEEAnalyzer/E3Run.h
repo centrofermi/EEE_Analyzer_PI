@@ -1,5 +1,10 @@
 #ifndef BOSS__E3RUN__LIBGUARD
 #define BOSS__E3RUN__LIBGUARD
+#include "E3RecoEvent.h" 
+#include "E3OutFileOUT.h" 
+#include "E3OutFileSUM.h" 
+#include "E3OutFileTIM.h" 
+#include "E3OutFile2TT.h" 
 
 class E3Run:public E3RecoEvent
 {
@@ -55,11 +60,12 @@ public:
 	//analyze run
 	void analyzeRun(std::string Source,std::string OutDir);
 	//open file and get header information
-	void open(std::string Source,std::string Option="");
+	UInt_32b open(std::string Source,std::string Option="");
 	//scan next event in file (if header already parsed)
 	UInt_16b analyzeEvent();
 	//close input file
 	void	close();
+    int ProcessRawEvent(int FileLength);
 
 
 	inline t_header getHeaderStruct()	{return _headerStruct;};

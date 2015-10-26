@@ -19,6 +19,7 @@
 */
 
 #include "stdafx.h"
+#include "E3Track.h" 
 
 
 E3Track::E3Track() :

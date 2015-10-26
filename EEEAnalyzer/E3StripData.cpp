@@ -19,6 +19,7 @@
 */
 
 #include "stdafx.h"
+#include "E3StripData.h" 
 
 E3StripData::E3StripData( UInt_16b plane, UInt_16b channel) :
   m_plane(plane),

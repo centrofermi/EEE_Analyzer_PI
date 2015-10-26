@@ -1,5 +1,6 @@
 #ifndef BOSS__INTDEF__LIBGUARD
 #define BOSS__INTDEF__LIBGUARD
+#include <stdint.h> 
 
 
 #define UInt_64b	uint64_t

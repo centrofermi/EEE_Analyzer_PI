@@ -1,5 +1,10 @@
 #ifndef BOSS__E3EVENT__LIBGUARD
 #define BOSS__E3EVENT__LIBGUARD
+#include "E3StripData.h"
+#include "intDef.h"
+#include "E3RawData.h"
+#include <iostream>
+#include <vector>
 
 
 
@@ -38,6 +43,8 @@ public:
 	inline UInt_32b getEvtBunch()		{return _bunch;}
 	inline UInt_32b getEvtCal()			{return _calib;}
 	inline UInt_32b getTrgNum()			{return _trgNum;}
+
+	E3StripDataVec GetStripDataVec(int chamber) {return m_stripDataVec[chamber];}
 
 	//set gps timestamp for event(sec since 1.1.207)
 	inline void setGpsTimestamp(UInt_64b GpsTime)	{_gpsTimestamp=GpsTime;};

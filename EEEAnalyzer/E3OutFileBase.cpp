@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "E3OutFileBase.h"
 
 
 E3OutFileBase::E3OutFileBase(void)

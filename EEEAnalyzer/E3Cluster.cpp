@@ -19,6 +19,7 @@
 */
 
 #include "stdafx.h"
+#include "E3Cluster.h"
 
 E3Cluster::E3Cluster() :
   m_plane(0)

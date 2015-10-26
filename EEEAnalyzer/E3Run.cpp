@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "E3Run.h" 
 
 
 E3Run::E3Run(void):_gHitMult(3,std::vector< UInt_32b>(1000,0)),_gSumHitMult(3000,0),
@@ -19,7 +20,7 @@ E3Run::~E3Run(void)
 {
 }
 
-void E3Run::open(std::string Source,std::string Option)
+UInt_32b E3Run::open(std::string Source,std::string Option)
 {
 
 	bool verbose=false;
@@ -33,7 +34,7 @@ void E3Run::open(std::string Source,std::string Option)
 	{
 
 		std::cout<<"Unable to open input files...reconstruction aborted"<<std::endl;
-		return;
+		return 0;
 	}
 
 	//get file size
@@ -53,7 +54,7 @@ void E3Run::open(std::string Source,std::string Option)
 	if (_headerStruct.Head_begin != 0xfbfbfbfb)
 	{
 		std::cout<< "Unknown file format..aborting"<<std::endl;
-		return;
+		return 0;
 	}
 
 	//print Header Info
@@ -85,12 +86,25 @@ void E3Run::open(std::string Source,std::string Option)
 	_headerParsed=true;
 	_analyzed=0;
 
+	return _fileLength;
 
 }
 
 void E3Run::close()
 {
 	_sourceStream.close();
+}
+
+int E3Run::ProcessRawEvent(int FileLength){
+  if(_sourceStream.tellg()>=FileLength) return 3;
+  E3RecoEvent::clear();
+  if(getEvent()==1)
+    {
+      std::cout<<"Event stream: unexpected fail to read file"<<std::endl;
+      return 2;
+    }
+  
+  return unpack();
 }
 
 UInt_16b E3Run::analyzeEvent()
@@ -171,7 +185,6 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 	//print Header Info
 	writeHeaderInfo(std::cout);
 
-	
 	//read Architecture
 	_sourceStream.read((char*)&_archStruct, sizeof(_archStruct));
 	writeArchInfo(std::cout); 

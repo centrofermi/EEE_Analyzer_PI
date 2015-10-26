@@ -19,6 +19,7 @@
 */
 
 #include "stdafx.h"
+#include "E3Point.h" 
 
 
 E3Point::E3Point() :

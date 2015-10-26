@@ -1,5 +1,8 @@
 #ifndef BOSS__E3RAWDATA__LIBGUARD
 #define BOSS__E3RAWDATA__LIBGUARD
+#include <iostream> 
+#include "Constant.h" 
+#include <vector> 
 
 
 

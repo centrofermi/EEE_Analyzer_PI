@@ -20,6 +20,8 @@
 
 #ifndef BOSS__E3CLUSTER__LIBGUARD
 #define BOSS__E3CLUSTER__LIBGUARD
+#include "E3Hit.h"
+#include "Constant.h"
 
 /*! \class E3Cluster
   \brief Class describing a cluster in the detector.

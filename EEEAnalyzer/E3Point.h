@@ -20,6 +20,7 @@
 
 #ifndef BOSS__E3POINT__LIBGUARD
 #define BOSS__E3POINT__LIBGUARD
+#include <iostream> 
 
 
 /*! \class E3Point

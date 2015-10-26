@@ -19,6 +19,7 @@
 */
 
 #include "stdafx.h"
+#include "E3Hit.h"
 
 
 

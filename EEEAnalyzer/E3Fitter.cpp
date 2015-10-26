@@ -19,6 +19,7 @@
 */
 
 #include "stdafx.h"
+#include "E3Fitter.h"
 
 
 E3FittingTool::E3FittingTool()

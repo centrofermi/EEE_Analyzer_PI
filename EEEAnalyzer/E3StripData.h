@@ -21,6 +21,9 @@
 
 #ifndef BOSS__E3STRIPDATA__LIBGUARD
 #define BOSS__E3STRIPDATA__LIBGUARD
+#include <iostream> 
+#include "intDef.h" 
+#include "E3RawData.h" 
 
 
 /*! \class E3StripData

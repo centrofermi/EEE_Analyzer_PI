@@ -1,8 +1,10 @@
 #ifndef BOSS__E3RECOEVENT__LIBGUARD
 #define BOSS__E3RECOEVENT__LIBGUARD
+#include "E3Event.h" 
+#include "E3Gps.h" 
+#include "E3Track.h" 
 
-
-typedef std::vector<std::pair<double, double>>  corr_vector;
+typedef std::vector<std::pair<double, double> >  corr_vector;
 typedef std::vector<corr_vector>  corr_matrix;
 
 class E3RecoEvent:public E3Event, public E3Gps

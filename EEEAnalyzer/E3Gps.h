@@ -1,5 +1,7 @@
 #ifndef BOSS__E3GPS__LIBGUARD
 #define BOSS__E3GPS__LIBGUARD
+#include <iostream>
+#include "SourceStruct.h"
 
 
 class E3Gps

@@ -1,5 +1,6 @@
 #ifndef BOSS__E3OUTFILETIM__LIBGUARD
 #define BOSS__E3OUTFILETIM__LIBGUARD
+#include "E3OutFileBase.h" 
 
 
 class E3OutFileTIM:public E3OutFileBase

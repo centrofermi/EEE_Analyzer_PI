@@ -20,6 +20,8 @@
 
 #ifndef BOSS__E3TRACK__LIBGUARD
 #define BOSS__E3TRACK__LIBGUARD
+#include "E3Vector.h" 
+#include "E3Cluster.h" 
 
 /*! \class E3Track
   \brief Class describing a reconstructed track.

@@ -1,6 +1,8 @@
 #ifndef BOSS__E3OUTFILEBASE__LIBGUARD
 #define BOSS__E3OUTFILEBASE__LIBGUARD
-
+#include <iostream>
+#include <iomanip>
+#include "E3StatusCode.h"
 
 
 
