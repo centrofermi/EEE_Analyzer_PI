@@ -3,8 +3,8 @@ CFLAGS = -c -Wall -malign-double
 EXECUTABLE = EEE_Analyzer_PI_V2
 all: EEE_Analyzer_PI
 
-EEE_Analyzer_PI:E3Cluster.o E3Event.o E3Fitter.o E3Gps.o E3Hit.o E3Point.o E3RawData.o E3RecoEvent.o E3Run.o E3StripData.o E3Track.o E3Vector.o stdafx.o E3OutFileBase.o E3OutFile2TT.o E3OutFileSUM.o E3OutFileOUT.o E3OutFileTIM.o
-	$(CC) E3OutFileBase.o E3OutFile2TT.o E3OutFileSUM.o E3OutFileOUT.o E3OutFileTIM.o E3Cluster.o E3Event.o E3Fitter.o E3Gps.o E3Hit.o E3Point.o E3RawData.o E3RecoEvent.o E3Run.o E3StripData.o E3Track.o E3Vector.o stdafx.o EEE_Analyzer_PI.cpp -o 		$(EXECUTABLE)
+EEE_Analyzer_PI:E3Cluster.o E3Event.o E3Fitter.o E3Gps.o E3Hit.o E3Point.o E3RawData.o E3RecoEvent.o E3Calib.o E3Run.o E3StripData.o E3Track.o E3Vector.o stdafx.o E3OutFileBase.o E3OutFile2TT.o E3OutFileSUM.o E3OutFileOUT.o E3OutFileTIM.o
+	$(CC) E3OutFileBase.o E3OutFile2TT.o E3OutFileSUM.o E3OutFileOUT.o E3OutFileTIM.o E3Cluster.o E3Event.o E3Fitter.o E3Gps.o E3Hit.o E3Point.o E3RawData.o E3RecoEvent.o E3Calib.o E3Run.o E3StripData.o E3Track.o E3Vector.o stdafx.o EEE_Analyzer_PI.cpp -o 		$(EXECUTABLE)
 
 E3OutFileBase.o: E3OutFileBase.cpp
 	$(CC) $(CFLAGS) E3OutFileBase.cpp
@@ -31,7 +31,9 @@ E3Point.o: E3Point.cpp
 E3RawData.o: E3RawData.cpp
 	$(CC) $(CFLAGS) E3RawData.cpp
 E3RecoEvent.o: E3RecoEvent.cpp
-	$(CC) $(CFLAGS) E3RecoEvent.cpp
+	$(CC) $(CFLAGS) E3RecoEvent.cpp	
+E3Calib.o: E3Calib.cpp
+	$(CC) $(CFLAGS) E3Calib.cpp
 E3Run.o: E3Run.cpp
 	$(CC) $(CFLAGS) E3Run.cpp
 E3StripData.o: E3StripData.cpp
