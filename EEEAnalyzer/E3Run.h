@@ -29,7 +29,7 @@ private:
 	char		_hRunName[128];	//run name
 	UInt_8b		_hMachineID;	//identifier of the telescope ID
 	UInt_32b	_hRunNumber;	//proggressive run number for the telescope
-	UInt_32b	_hNinoMap;		//nino map
+	UInt_32b	_hNinoMap;		//nino map!!!
 
 	//run sum
 	UInt_32b _analyzed;										//events correctly analyzed
