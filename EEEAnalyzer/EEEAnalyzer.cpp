@@ -19,8 +19,8 @@ int main(int argc, char* argv[])
 	std::string OutDir = sourceFile.substr(0,sourceFile.find_last_of("\\/",sourceFile.size()-2)+1);
 
 	E3Run TheRun;
-	//TheRun.analyzeRun(sourceFile,OutDir);
-	TheRun.open(sourceFile);
+	TheRun.analyzeRun(sourceFile,OutDir);
+	/*TheRun.open(sourceFile);
 	
 	//retrive struct
 	TheRun.getArchStruct();
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 	 // get event time information
 
 
-	}
+	}*/
 
 
 	

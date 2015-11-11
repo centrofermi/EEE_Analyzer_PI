@@ -2,34 +2,6 @@
 #define BOSS__SOURCESTRUCT__LIBGUARD
 #include "intDef.h" 
 
-typedef struct daq
-{
-    UInt_16b version;
-	UInt_32b Head_begin;
-	UInt_32b Head_end;
-	char status[20];
-	char name[128];
-	char runTag[64];
-	char dataPath[256];
-    UInt_32b runNumber;
-	UInt_16b fatalError;
-	UInt_16b write;
-	UInt_16b Globwrite;
-	UInt_16b stopRq;
-	UInt_16b resynch;
-	UInt_64b StartTime;
-	UInt_64b LastMonitor;	
-	UInt_16b SysInfoLock;
-	UInt_64b GlobMaxEvt;
-	UInt_64b GlobEvtNum;
-	UInt_32b EvtNum;
-	UInt_32b runSize;
-	FILE *NewFormatFile;
-	FILE *BinStatusFile;
-	FILE *BinDataFile;
-	FILE *ArchFile;
-	
-} t_daq;
 
 typedef struct header
 {
@@ -37,7 +9,6 @@ typedef struct header
     UInt_16b version;
     UInt_32b runNumber;
 	char name[128];
-	UInt_8b trigger;
 	UInt_64b StartTime;
 	UInt_32b Head_end;
 	
@@ -56,6 +27,7 @@ typedef struct gps
 	double		altitude;
 	char 		latHem;
 	char		lonHem;
+	UInt_64b	pps_latency;  //ns
 } t_gps;
 
 typedef struct ws
@@ -72,9 +44,18 @@ typedef struct ws
 	UInt_32b pressure;
 } t_ws;
 
+
 typedef struct arch
 {
-	double planeDist[3];
+	double planeDist[3];	
+	UInt_16b trg_type;
+	UInt_64b trg_latency;	
+	UInt_32b match_window;
+	UInt_32b search_window;	
+	UInt_32b window_offset;	
+	UInt_32b reject_offset;	
+	UInt_32b detection_mode; //0 leading, 1 leading&trailing, 2 pairing
+	UInt_32b resolution;     // ps
 	UInt_8b machineID;
 	UInt_32b NINO_map;
 	UInt_8b Board_plug;
@@ -87,6 +68,5 @@ typedef struct arch
 	UInt_8b fecType[6];
 	
 } t_arch;
-
 
 #endif

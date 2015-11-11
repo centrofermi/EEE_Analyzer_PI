@@ -84,7 +84,8 @@ std::ostream&  E3Gps::writeGpsInfo(std::ostream& os)
 		<< "Altitude	= " << (UInt_32b) _gpsStruct.altitude<<std::endl
 		<< "EEE time	= " << _gpsE3Timestamp<<std::endl
 	 	<< "GPGGA		= " << _gpsStruct.gpgga_str<<std::endl
-		<< "GPRMC		= " << _gpsStruct.gprmc_str<<std::endl<<std::endl;
+		<< "GPRMC		= " << _gpsStruct.gprmc_str<<std::endl
+		<< "PPS Latency	= " << _gpsStruct.pps_latency<<std::endl<<std::endl;
 
   return os;
 }

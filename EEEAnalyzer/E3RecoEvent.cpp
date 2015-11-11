@@ -31,7 +31,7 @@ UInt_16b E3RecoEvent::findHits()
 	//to be fixed CONFIGURATION FILE
 	UInt_32b cableDelay[3][2]={{0,0},{0,0},{0,0}};
 
-			double planeDist[3]={149,96,43};
+			double planeDist[3]={133,88,43};
 
 
 

@@ -321,8 +321,7 @@ std::ostream& E3Run::writeHeaderInfo(std::ostream& os)
 	os 	<< "Run Name	= " <<	_headerStruct.name<<std::endl
 		<< "Run Number	= " <<	_headerStruct.runNumber<<std::endl
 		<< "DAQ Version	= " <<	_headerStruct.version<<std::endl
-		<< "DAQ Start	= " <<	_headerStruct.StartTime <<std::endl
-		<< "Trg Mask	= " <<std::hex<<	(UInt_16b)_headerStruct.trigger<<std::endl<<std::endl;
+		<< "DAQ Start	= " <<	_headerStruct.StartTime <<std::endl<<std::endl;
 	return os;
 }
 
@@ -367,7 +366,16 @@ std::ostream&	E3Run::writeArchInfo(std::ostream& os)
 
 	os<<"****************** ARCHITECTURE INFO *****************"<<std::endl<<std::endl;
 
-	os	<<"Plane Z Top		=	" << _archStruct.planeDist[0]<<std::endl
+	os	
+		<< "Trg Mask		= 0x" <<std::hex<<	(UInt_16b)_archStruct.trg_type<<std::endl
+		<< "Trg Latency		= " <<std::dec<<_archStruct.trg_latency<<std::endl
+		<< "Match window		=	0x" <<_archStruct.match_window<<std::endl
+		<< "Search Window		=	0x" <<_archStruct.search_window<<std::endl	
+		<< "Window Offset		=	0x" <<std::hex<<_archStruct.window_offset<<std::endl	
+		<< "Reject Offset		=	0x" <<std::hex<<_archStruct.reject_offset<<std::endl	
+		<< "Detection Mode		=	" <<std::dec<<_archStruct.detection_mode<<std::endl //0 leading, 1 leading&trailing, 2 pairing
+		<< "Resolution		= " <<_archStruct.resolution<<std::endl     // ps
+		<<"Plane Z Top		=	" << _archStruct.planeDist[0]<<std::endl
 		<<"Plane Z Mid		=	" << _archStruct.planeDist[1]<<std::endl
 		<<"Plane Z Bot		=	" << _archStruct.planeDist[2]<<std::endl
 		<<"Cable TR Length		=	" << _archStruct.cableLength[0]<<std::endl
