@@ -39,25 +39,64 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 	t_gps EEE_gps;
 	E3Track bestTrack;
 
+	t_arch500	my_arch500;
+	t_gps500	my_gps500;
+	t_header500 my_header500;
+	t_ws500		my_ws500;
+
 	do
 	{
 		_sourceStream.read((char*)&_hH,			sizeof(_hH)				);  //fix for standard EEE header
 		//std::cout<< "Found "<<_hH<<std::endl;
 	} while (_hH!=0xfbfbfbfb && (_sourceStream.tellg()<FileLength));
 
+	//read DAQ Version
 	_sourceStream.read((char*)&_hVersion,	sizeof(_hVersion)		);
-	_sourceStream.read((char*)&_hMachineID,	sizeof(_hMachineID)		);
-	_sourceStream.read((char*)&_hRunNumber,	sizeof(_hRunNumber)		);
-	_sourceStream.read((char*)&_hRunNameL,	sizeof(_hRunNameL)		);
-	_sourceStream.read((char*)&_hRunName,	_hRunNameL				);
-	_sourceStream.read((char*)&_hTrgMask,	sizeof(_hTrgMask)		);
-	_sourceStream.read((char*)&_hNinoMap,	sizeof(_hNinoMap)		);
-	_sourceStream.read((char*)&_hStartTime,	sizeof(_hStartTime)		);
-	_sourceStream.read((char*)&EEE_gps,		sizeof(t_gps)			);
-	_sourceStream.read((char*)&_hT,			sizeof(_hT)				);
+	if (_hVersion<500)
+	{
+		_sourceStream.read((char*)&_hMachineID,	sizeof(_hMachineID)		);
+		_sourceStream.read((char*)&_hRunNumber,	sizeof(_hRunNumber)		);
+		_sourceStream.read((char*)&_hRunNameL,	sizeof(_hRunNameL)		);
+		_sourceStream.read((char*)&_hRunName,	_hRunNameL				);
+		_sourceStream.read((char*)&_hTrgMask,	sizeof(_hTrgMask)		);
+		_sourceStream.read((char*)&_hNinoMap,	sizeof(_hNinoMap)		);
+		_sourceStream.read((char*)&_hStartTime,	sizeof(_hStartTime)		);
+		_sourceStream.read((char*)&EEE_gps,		sizeof(t_gps)			);
+		_sourceStream.read((char*)&_hT,			sizeof(_hT)				);
+	}
+	else  //wrapper!
+	{
+		_sourceStream.seekg (0, _sourceStream.beg);
+		_sourceStream.read((char*)&my_header500,	sizeof(my_header500)		);
+		_sourceStream.read((char*)&my_arch500,	sizeof(my_arch500)		);
+		_sourceStream.read((char*)&my_gps500,	sizeof(my_gps500)		);
+		_sourceStream.read((char*)&my_ws500,	sizeof(my_ws500)		);
+
+		//set intenal variable
+		_hMachineID=my_arch500.machineID;
+		_hRunNumber=my_header500.runNumber;
+		_hTrgMask=my_arch500.trg_type;
+		_hNinoMap=my_arch500.NINO_map;
+		_hStartTime=my_header500.StartTime;
+		_hRunNameL=sizeof(my_header500.name)/sizeof(*my_header500.name);
+		strcpy(_hRunName,my_header500.name);
+
+		strcpy(EEE_gps.gpgga_str,my_gps500.gpgga_str);
+		strcpy(EEE_gps.gprmc_str,my_gps500.gprmc_str);
+		EEE_gps.latHem=my_gps500.latHem;
+		EEE_gps.latitude=my_gps500.latitude;
+		EEE_gps.longitude=my_gps500.longitude;
+		EEE_gps.lonHem=my_gps500.lonHem;
+		EEE_gps.quality=my_gps500.quality;
+		EEE_gps.UTCdate=my_gps500.UTCdate;
+		EEE_gps.UTCtime=my_gps500.UTCtime;
+	}
+
+
 
 	//set event gps timestamp
 	setGpsTimestamp(getGpsE3Timestamp());
+	setNinoMap(_hNinoMap);
 
 	//print Header Info
 
@@ -82,7 +121,6 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 
 	//start event loop
 
-	setNinoMap(_hNinoMap);
 	_analyzed=0;
 	int GoodEvent=0;
 	int trackfound=0;
