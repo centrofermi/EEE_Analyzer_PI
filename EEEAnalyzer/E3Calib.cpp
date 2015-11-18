@@ -40,8 +40,9 @@ void E3Calib::init()
 	}
 
 	//initTree
-
-	 _hitsTree.Branch("eventNumber",&_hits_en   );
+	
+	 _hitsTree.Branch("ev_seconds"		,&_hits_sec   );
+	 _hitsTree.Branch("ev_ns"			,&_hits_ns   );
      _hitsTree.Branch("x"			,&_hits_x    );
      _hitsTree.Branch("y"			,&_hits_y    );
      _hitsTree.Branch("z"			,&_hits_z    );
@@ -49,7 +50,8 @@ void E3Calib::init()
      _hitsTree.Branch("TOT_l"		,&_hits_TOT_l);
      _hitsTree.Branch("TOT_r"		,&_hits_TOT_l);
 	 
-	 _rawHitsTree.Branch("eventNumber",&_hits_en);
+	 _rawHitsTree.Branch("ev_seconds"		,&_hits_sec   );
+	 _rawHitsTree.Branch("ev_ns"			,&_hits_ns   );
 	 _rawHitsTree.Branch("plane",&_rawHit_plane);
 	 _rawHitsTree.Branch("strip",&_rawHit_strip);
 	 _rawHitsTree.Branch("time",&_rawHit_time);
@@ -106,7 +108,10 @@ void E3Calib::computeCorrections()
 void E3Calib::fill()
 {
 	
-	_hits_en   = getEvtNum() ;
+	_hits_sec =getEvtSec()+getGpsE3Timestamp();
+	
+	uint32_t clkNum=getEvtBunch()+getEvtOrbit()*4000;
+	_hits_ns =1.0/(double)(getEvtCal())*(double)clkNum/1e-9;
 	
 	for (int chIdx=0;chIdx<_rawYMatrix.size();chIdx++)
 	{
