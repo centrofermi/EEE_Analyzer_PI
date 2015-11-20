@@ -40,7 +40,7 @@ void E3Calib::init()
 	}
 
 	//initTree
-	
+	 _hitsTree.Branch("eventNumber",&_hits_en   );
 	 _hitsTree.Branch("ev_seconds"		,&_hits_sec   );
 	 _hitsTree.Branch("ev_ns"			,&_hits_ns   );
      _hitsTree.Branch("x"			,&_hits_x    );
@@ -50,6 +50,7 @@ void E3Calib::init()
      _hitsTree.Branch("TOT_l"		,&_hits_TOT_l);
      _hitsTree.Branch("TOT_r"		,&_hits_TOT_l);
 	 
+	 _hitsTree.Branch("eventNumber",&_hits_en   );
 	 _rawHitsTree.Branch("ev_seconds"		,&_hits_sec   );
 	 _rawHitsTree.Branch("ev_ns"			,&_hits_ns   );
 	 _rawHitsTree.Branch("plane",&_rawHit_plane);
@@ -107,6 +108,7 @@ void E3Calib::computeCorrections()
 
 void E3Calib::fill()
 {
+    _hits_en   = getEvtNum() ;
 	
 	_hits_sec =getEvtSec()+getGpsE3Timestamp();
 	

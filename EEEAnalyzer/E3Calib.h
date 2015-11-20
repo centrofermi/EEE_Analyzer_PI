@@ -36,6 +36,7 @@ private:
 	
 	uint32_t  _hits_sec;
 	uint32_t  _hits_ns;
+	uint32_t  _hits_en;
 	double  _hits_x;
 	double  _hits_y;
 	double  _hits_z;
