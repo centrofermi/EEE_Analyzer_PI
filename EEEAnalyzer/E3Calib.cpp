@@ -50,7 +50,7 @@ void E3Calib::init()
      _hitsTree.Branch("TOT_l"		,&_hits_TOT_l);
      _hitsTree.Branch("TOT_r"		,&_hits_TOT_l);
 	 
-	 _hitsTree.Branch("eventNumber",&_hits_en   );
+	 _rawHitsTree.Branch("eventNumber",&_hits_en   );
 	 _rawHitsTree.Branch("ev_seconds"		,&_hits_sec   );
 	 _rawHitsTree.Branch("ev_ns"			,&_hits_ns   );
 	 _rawHitsTree.Branch("plane",&_rawHit_plane);
@@ -72,7 +72,9 @@ void E3Calib::computeCorrections()
 		//compute mean hit arrival time
 		hit_time=0.0;
 		valid_strips=0;
-		for (int strIdx=0;strIdx<_rawYMatrix.at(0).size();strIdx++)
+
+		//primo loop sulle strip per calcolare la media globale dei THit
+		for (int strIdx=0;strIdx<_rawYMatrix.at(0).size();strIdx++) 
 		{
 			if (_meanTMatrix[chIdx][strIdx]>0)
 			{
@@ -80,18 +82,18 @@ void E3Calib::computeCorrections()
 				valid_strips++;
 			}
 		}
-		hit_time/=valid_strips;
-		//std::cout<<"mean hit time "<< hit_time<<std::endl;
+		hit_time/=valid_strips; // media dei Thit sulla camere
 
 		//adjust strip offset		
-		for (int strIdx=0;strIdx<_rawYMatrix.at(0).size();strIdx++)
+		for (int strIdx=0;strIdx<_rawYMatrix.at(0).size();strIdx++) // secondo loop sulle strip
 		{
-			delta_time=(hit_time-_meanTMatrix[chIdx][strIdx])*1000.0;  //ps
+			//offset tra la media della strip e la media della camera
+			delta_time=(hit_time-_meanTMatrix[chIdx][strIdx])*1000.0;  //ps  
 			_corrMatrix[chIdx][strIdx].first=delta_time;   //hit time = (Tleft+Tright)/2
 			_corrMatrix[chIdx][strIdx].second=delta_time;
 			
 			//std::cout<<"strip "<<strIdx<<" time correction: "<< delta_time<<std::endl;
-
+			//correzione spaziale
 			y_offset=_meanYMatrix[chIdx][strIdx];		//should be centered at 0.0
 			//std::cout<<"strip "<<strIdx<<" y cm offset: "<< y_offset<<std::endl;
 			strip_ps_offset=y_offset*2.0/PROP_SPEED*1000.0; //mean ps strip offset 
