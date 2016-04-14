@@ -103,7 +103,7 @@ UInt_16b E3Event::unpack()
 					std::cout<<"Warning: No TDC "<<TDCIdx<<" internal trailer found in event "<< _evtNum <<" board "<<boardIdx<<". Event analysis skipped" << std::endl;
 					return 4;
 				}
-				if (iter->isEdge())
+				if (iter->isEdge() && NINO_id!=0xf )
 				{
 					E3RawMapKey key = std::make_pair(plane, iter->getChannel());
 					rawMap[key].push_back(std::make_pair(side, *iter));
@@ -133,7 +133,7 @@ UInt_16b E3Event::unpack()
 		 value++) {
 	    stripData.addEdgeDigi(value->first, value->second);
 	  }
-	/*	stripData.fillStream(std::cout);
+		/*stripData.fillStream(std::cout);
 		std::cout<<std::endl;*/
 	  addStripData(item->first.first, stripData);
 	}
