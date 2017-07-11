@@ -23,6 +23,9 @@ protected:
 	UInt_32b	_trgNum;
 	UInt_32b	_calib;
 	UInt_32b	_ninoMap;
+	double      _planeDist[3];
+	double	    _cableLenght[6];
+	UInt_8b     _fecType[6];
 
 	//gps Info
 	UInt_32b	_gpsTimestamp;
@@ -48,8 +51,11 @@ public:
 
 	//set gps timestamp for event(sec since 1.1.207)
 	inline void setGpsTimestamp(UInt_64b GpsTime)	{_gpsTimestamp=GpsTime;};
-	//set NINO to TDC connection map
+	//set arch connection map
 	inline void		setNinoMap(UInt_32b NinoMap)		{_ninoMap=NinoMap;}
+	inline void     setPlaneDist(double* planeDist)    { memcpy(_planeDist, planeDist, 3 * sizeof(double));};
+	inline void     setCableDelay(double* cableLength) {memcpy(_cableLenght,cableLength, 3 * sizeof(double));};
+	inline void     setFecType(UInt_8b* fecType) {memcpy(_fecType,fecType, 6 * sizeof(UInt_8b));};
 
 	//add raw data to vector
 	inline void addRawData(E3RawData rawData)	{_rawDataVec.push_back(rawData);};

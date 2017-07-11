@@ -26,12 +26,10 @@ void E3RecoEvent::clear()
 }
 
 
-UInt_16b E3RecoEvent::findHits()
+UInt_16b E3RecoEvent::findHits(double* planeDist, double* cableLenght)
 {
 	//to be fixed CONFIGURATION FILE
 	UInt_32b cableDelay[3][2]={{0,0},{0,0},{0,0}};
-
-			double planeDist[3]={133,88,43};
 
 
 
@@ -234,7 +232,7 @@ E3Track E3RecoEvent::bestTrack()
 }
 UInt_16b E3RecoEvent::reconstruct()
 {
-	findHits();
+	findHits(_planeDist,_cableLenght);
 	findClusters();
 	findTracks();
 	return 0;

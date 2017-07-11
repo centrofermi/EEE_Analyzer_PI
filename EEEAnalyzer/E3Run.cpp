@@ -81,6 +81,9 @@ UInt_32b E3Run::open(std::string Source,std::string Option)
 	setGpsTimestamp(getGpsE3Timestamp());
 	//set nino Mapping
 	setNinoMap(_archStruct.NINO_map);
+	setPlaneDist(_archStruct.planeDist);
+	setFecType(_archStruct.fecType);
+	setCableDelay(_archStruct.cableLength);
 
 	
 	_headerParsed=true;
@@ -221,6 +224,10 @@ void E3Run::analyzeRun(std::string Source,std::string OutDir)
 	//start event loop
 
 	setNinoMap(_archStruct.NINO_map);
+	setPlaneDist(_archStruct.planeDist);
+	setFecType(_archStruct.fecType);
+	setCableDelay(_archStruct.cableLength);
+
 	_analyzed=0;
 	int GoodEvent=0;
 	int trackfound=0;

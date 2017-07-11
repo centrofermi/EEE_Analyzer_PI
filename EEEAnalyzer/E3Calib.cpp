@@ -146,8 +146,12 @@ void E3Calib::fill()
 		E3RawDataVecIter posEdge, negEdge;
 		E3RawDataVec posVec, negVec;
 		
+		// fix for empty event (no hit)
+		if ( (m_stripDataVec[0].size()==0) && (m_stripDataVec[1].size()==0) && (m_stripDataVec[2].size()==0))
+		{
+			_rawHitsTree.Fill();
+		}
 		// Loop over the telescope planes...
-
 		for (UInt_16b plane = 0; plane < 3; plane++) 
 		{
 			// Loop over the full strip data in the plane...
@@ -263,6 +267,9 @@ corr_matrix E3Calib::runCalibration(std::string Source,std::string OutDir,bool d
 	std::cout<<"Calibrating..."<<std::endl;
 
 	setNinoMap(_archStruct.NINO_map);
+	setPlaneDist(_archStruct.planeDist);
+	setCableDelay(_archStruct.cableLength);
+	setFecType(_archStruct.fecType);
 	
 	std::cout<<"Skanning events....."<< std::endl;
 	while (_sourceStream.tellg()<FileLength)
@@ -277,7 +284,7 @@ corr_matrix E3Calib::runCalibration(std::string Source,std::string OutDir,bool d
 		if(unpack()==0)
 		{
 			
-			findHits();
+			findHits(_planeDist,_cableLenght);
 			fill();
 			
 		}

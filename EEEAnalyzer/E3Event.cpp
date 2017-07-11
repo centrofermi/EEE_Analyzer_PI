@@ -82,6 +82,7 @@ UInt_16b E3Event::unpack()
 			NINO_id=(_ninoMap>>(16*boardIdx+4*TDCIdx))&0xf;  //extract nino id
 			UInt_16b plane	=	NINO_id/2; //(0,1=plane0; 2,3=plane1; 4,5=plane2)
 			UInt_16b side	=	NINO_id%2; //(0,2,4=positive; 1,3,5=negative)
+			//std::cout<< NINO_id<<"		"<< _fecType[NINO_id]<< std::endl;
 
 			if (!((++iter)->isTdcBegin(TDCIdx))) //cerco l'inizio del TDC
 			{
@@ -105,7 +106,21 @@ UInt_16b E3Event::unpack()
 				}
 				if (iter->isEdge() && NINO_id!=0xf )
 				{
-					E3RawMapKey key = std::make_pair(plane, iter->getChannel());
+					E3RawMapKey key;
+					if (NINO_id%2==0) // positive nino, should be V1
+					{
+						if (_fecType[NINO_id]==1)
+							 key = std::make_pair(plane, iter->getChannel());
+						else
+							 key = std::make_pair(plane,23 - iter->getChannel());
+					}
+					else //negative NINO, should be V3
+					{
+						if (_fecType[NINO_id]==3)
+							 key = std::make_pair(plane, iter->getChannel());
+						else
+							 key = std::make_pair(plane,23 - iter->getChannel());
+					}
 					rawMap[key].push_back(std::make_pair(side, *iter));
 				}
 			}

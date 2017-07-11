@@ -51,7 +51,7 @@ public:
 	UInt_16b reconstruct();
 
 	// find hits in the event
-	UInt_16b findHits();
+	UInt_16b findHits(double* planeDist, double* cableLenght);
 
 private:
 
